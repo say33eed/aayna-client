@@ -5,7 +5,7 @@ import { ApiStatus } from "./api-status";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { BrandMark } from "./brand-mark";
 
 type Theme = "dark" | "light";
@@ -53,6 +53,15 @@ export function SiteShell({
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (!menuOpen) return;
+    function onEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [menuOpen]);
+
+  useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
@@ -68,7 +77,7 @@ export function SiteShell({
   }
 
   const links = [
-    { href: "/services", label: "Services" },
+    { href: "/services", label: "Explore services" },
     { href: "/how-it-works", label: "How it works" },
   ];
 
@@ -81,10 +90,10 @@ export function SiteShell({
           aria-label="AAYNA home"
           onClick={() => setMenuOpen(false)}
         >
-          <BrandMark size={36} />
+          <BrandMark size={28} color="accent" />
 
           <span>
-            aayna<span className="brand-dot">.</span>
+            aayna<span className="brand-dot" aria-hidden="true" />
           </span>
         </Link>
 
@@ -96,11 +105,8 @@ export function SiteShell({
             <Link
               key={link.href}
               href={link.href}
-              className={
-                pathname === link.href
-                  ? "nav-link active"
-                  : "nav-link"
-              }
+              className={pathname === link.href ? "nav-link active" : "nav-link"}
+              aria-current={pathname === link.href ? "page" : undefined}
             >
               {link.label}
             </Link>
@@ -108,6 +114,9 @@ export function SiteShell({
         </nav>
 
         <div className="header-actions">
+          <Link href="/services" className="header-cta" aria-label="Explore available services">
+            Explore <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
           <span
             className="market-label"
             title="Initial service area: Dhaka, Bangladesh"
@@ -165,7 +174,8 @@ export function SiteShell({
             <Link
               key={link.href}
               href={link.href}
-              className="mobile-nav-link"
+              className={pathname === link.href ? "mobile-nav-link active" : "mobile-nav-link"}
+              aria-current={pathname === link.href ? "page" : undefined}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
@@ -180,11 +190,21 @@ export function SiteShell({
       </main>
 
       <footer className="site-footer">
-        <span>
-          © {new Date().getFullYear()} AAYNA
-        </span>
-
-        <span>Looking good, simplified.</span>
+        <div className="footer-main">
+          <Link href="/" className="footer-brand-group" aria-label="AAYNA home">
+            <BrandMark size={23} color="accent" />
+            <span className="footer-wordmark">aayna<span className="brand-dot" aria-hidden="true" /></span>
+          </Link>
+          <p className="footer-tagline">Looking good, simplified.</p>
+        </div>
+        <nav className="footer-links" aria-label="Footer navigation">
+          <Link href="/services">Explore services</Link>
+          <Link href="/how-it-works">How it works</Link>
+        </nav>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} AAYNA. All rights reserved.</span>
+          <span>Made for Dhaka. Designed for everywhere.</span>
+        </div>
       </footer>
     </div>
   );
