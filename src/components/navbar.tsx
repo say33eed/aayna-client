@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { BrandMark } from "./brand-mark";
+import { NavigationLink } from "./ui/navigation-link";
+import { Button } from "./ui/button";
 
 type Theme = "dark" | "light";
 const THEME_KEY = "aayna-theme";
@@ -47,6 +49,7 @@ export function Navbar() {
   return (
     <>
       <header className="site-header">
+        <div className="site-container navbar-inner">
         <Link
           href="/"
           className="brand"
@@ -65,21 +68,22 @@ export function Navbar() {
           aria-label="Main navigation"
         >
           {links.map((link) => (
-            <Link
+            <NavigationLink
               key={link.href}
               href={link.href}
-              className={active(link.href) ? "nav-link active" : "nav-link"}
-              aria-current={active(link.href) ? "page" : undefined}
+              active={active(link.href)}
             >
               {link.label}
-            </Link>
+            </NavigationLink>
           ))}
         </nav>
 
         <div className="header-actions">
-          <Link href="/services" className="header-cta" aria-label="Explore available services">
-            Explore <ArrowUpRight size={16} aria-hidden="true" />
-          </Link>
+          <Button asChild size="sm">
+            <Link href="/services" aria-label="Explore available services">
+              Explore <ArrowUpRight size={16} aria-hidden="true" />
+            </Link>
+          </Button>
           <span
             className="market-label"
             title="Initial service area: Dhaka, Bangladesh"
@@ -125,28 +129,28 @@ export function Navbar() {
             )}
           </button>
         </div>
-      </header>
-
+        </div>
       {menuOpen && (
         <nav
           id="mobile-navigation"
           className="mobile-nav"
           aria-label="Mobile navigation"
         >
+          <div className="site-container mobile-nav-inner">
           {links.map((link) => (
-            <Link
+            <NavigationLink
               key={link.href}
               href={link.href}
-              className={active(link.href) ? "mobile-nav-link active" : "mobile-nav-link"}
-              aria-current={active(link.href) ? "page" : undefined}
+              active={active(link.href)}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
-            </Link>
+            </NavigationLink>
           ))}
+          </div>
         </nav>
       )}
-
+      </header>
     </>
   );
 }

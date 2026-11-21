@@ -1,0 +1,25 @@
+.link {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+  color: var(--muted);
+  text-decoration: none;
+  border: 0;
+  box-shadow: none;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: var(--muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+.link:hover::after,
+.link:focus-visible::after {
+  opacity: 1;
+}
