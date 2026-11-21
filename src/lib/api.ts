@@ -25,6 +25,7 @@ export async function apiRequest<T>(
   const timeout = setTimeout(() => controller.abort(), 90000);
   const { signal, ...rest } = options;
   const abortFromCaller = () => controller.abort();
+  if (signal?.aborted) controller.abort();
   signal?.addEventListener("abort", abortFromCaller, { once: true });
   try {
     const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -33,7 +34,8 @@ export async function apiRequest<T>(
       signal: controller.signal,
     });
     if (!response.ok) {
-      throw new ApiError(`API returned HTTP ${response.status}.`, response.status);
+      const body = await response.json().catch(() => null);
+      throw new ApiError(typeof body?.message === "string" ? body.message : `API returned HTTP ${response.status}.`, response.status);
     }
     try {
       return (await response.json()) as T;
@@ -52,8 +54,8 @@ export async function apiRequest<T>(
   }
 }
 
-export async function getApiHealth(): Promise<HealthResponse> {
-  const result = await apiRequest<HealthResponse>("/health");
+export async function getApiHealth(signal?: AbortSignal): Promise<HealthResponse> {
+  const result = await apiRequest<HealthResponse>("/health", { signal });
   if (
     result?.success !== true ||
     result.data?.service !== "aayna-server" ||

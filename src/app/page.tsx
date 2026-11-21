@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { ApiStatus } from "@/components/api-status";
 
 export default function Home() {
   return (
@@ -13,7 +12,6 @@ export default function Home() {
         <Link href="/how-it-works" className="button button-secondary">How it works</Link>
       </div>
       <p className="support-note">Starting in Dhaka, Bangladesh.</p>
-      <ApiStatus />
     </section>
   );
 }

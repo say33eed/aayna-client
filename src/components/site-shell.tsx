@@ -1,6 +1,7 @@
 
 "use client";
 
+import { ApiStatus } from "./api-status";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
@@ -173,6 +174,7 @@ export function SiteShell({
         </nav>
       )}
 
+      <ApiStatus />
       <main className="main-content">
         {children}
       </main>
