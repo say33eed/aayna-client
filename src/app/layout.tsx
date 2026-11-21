@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { SiteShell } from "@/components/site-shell";
+import { Nunito_Sans, Quicksand, Hind_Siliguri } from "next/font/google";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { ApiStatus } from "@/components/api-status";
 import "./globals.css";
 import { OperationFeedback } from "@/components/operation-feedback";
 
-const geist = Geist({ subsets: ["latin"], display: "swap" });
+const nunitoSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-nunito" });
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"], display: "swap", variable: "--font-wordmark" });
+const hindSiliguri = Hind_Siliguri({ subsets: ["bengali"], weight: ["400", "500", "600", "700"], display: "swap", variable: "--font-bangla" });
 
 export const metadata: Metadata = {
   title: { default: "AAYNA — Looking good, simplified.", template: "%s | AAYNA" },
@@ -15,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className={geist.className}><SiteShell>{children}</SiteShell><OperationFeedback /></body>
+      <body className={`${nunitoSans.variable} ${quicksand.variable} ${hindSiliguri.variable}`}><div className="site-shell"><Navbar /><ApiStatus /><main className="main-content">{children}</main><Footer /></div><OperationFeedback /></body>
     </html>
   );
 }

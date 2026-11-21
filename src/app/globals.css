@@ -7,7 +7,7 @@
   --surface: #171717;
   --muted: #a3a3a3;
   --border: #292929;
-  --primary-bg: #ffffff;
+  --primary-bg: #FF5100;
   --primary-text: #090909;
 }
 :root[data-theme="light"] {
@@ -17,12 +17,12 @@
   --surface: #f7f7f7;
   --muted: #737373;
   --border: #e5e5e5;
-  --primary-bg: #111111;
-  --primary-text: #ffffff;
+  --primary-bg: #FF5100;
+  --primary-text: #090909;
 }
 * { box-sizing: border-box; }
 html { background: var(--background); }
-body { margin: 0; min-height: 100vh; background: var(--background); color: var(--foreground); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-nunito), var(--font-bangla), sans-serif; margin: 0; min-height: 100vh; background: var(--background); color: var(--foreground); -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
 a, button { -webkit-tap-highlight-color: transparent; }
@@ -30,7 +30,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .site-shell { max-width: 1440px; min-height: 100vh; margin: 0 auto; padding: 0 clamp(24px, 6vw, 96px); display: flex; flex-direction: column; }
 .site-header { height: 88px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 27px; font-weight: 700; letter-spacing: -1.8px; white-space: nowrap; }
-.brand-dot { color: var(--muted); }
+.brand-dot { display: inline-block; width: .19em; height: .19em; margin-left: .045em; border-radius: 50%; background-color: #FF5100; vertical-align: baseline; font-size: 0; line-height: 0; }
 .desktop-nav { display: flex; align-items: center; gap: 32px; }
 .nav-link { color: var(--muted); font-size: 14px; transition: color 160ms ease; }
 .nav-link:hover, .nav-link.active { color: var(--foreground); }
@@ -46,8 +46,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .hero-description, .inner-description { max-width: 550px; margin: 28px 0 0; color: var(--muted); font-size: clamp(17px, 1.8vw, 21px); line-height: 1.65; }
 .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 10px; font-size: 14px; font-weight: 600; transition: opacity 150ms ease; }
-.button:hover { opacity: .82; }
-.button-primary { background: var(--primary-bg); color: var(--primary-text); }
+.button:hover { opacity: 1; }
+.button-primary { background: var(--primary-bg); color: #090909; border: 1px solid transparent; transition: background-color 180ms ease, border-color 180ms ease; }
+.button-primary:hover:not(:disabled) { background: #FFFFFF; color: #090909; border-color: var(--border); }
+.button-primary:disabled { opacity: .5; cursor: not-allowed; }
 .button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--foreground); }
 .support-note { margin-top: 24px; color: var(--muted); font-size: 13px; }
 .site-footer { min-height: 80px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 16px; color: var(--muted); font-size: 12px; }
@@ -96,3 +98,69 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .operation-toasts { position:fixed; z-index:90; top:16px; right:16px; width:min(360px,calc(100% - 32px)); display:grid; gap:8px; pointer-events:none; }
 .operation-toast { display:flex; justify-content:space-between; gap:12px; pointer-events:auto; }
 .operation-toast .icon-button { flex-shrink:0; }
+
+/* AAYNA brand system: Nunito Sans, Bengali fallback, vibrant orange accent */
+:root { --accent: #FF5100; --accent-foreground: #090909; }
+:lang(bn) { font-family: var(--font-bangla), var(--font-nunito), sans-serif; }
+.brand { font-weight: 800; }
+.button-primary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
+/* Wordmark-only accent dot, including footer. */
+.footer-wordmark { font-weight: 800; letter-spacing: -.035em; color: var(--foreground); }
+
+
+/* Monogram has no tile or background in either theme. */
+.footer-brand-group { display: inline-flex; align-items: center; gap: 7px; }
+
+/* AAYNA wordmark: rounded Quicksand lettering and a visible circular orange dot. */
+.brand > span:last-child, .footer-wordmark { font-family: var(--font-wordmark), var(--font-nunito), sans-serif; font-weight: 700; }
+.brand-dot { display: inline-block; width: .20em; height: .20em; min-width: .20em; margin-left: .055em; border-radius: 50%; background: #FF5100; vertical-align: baseline; font-size: inherit; line-height: 1; color: transparent; }
+
+/* Feature 01: shared navigation and footer. */
+.site-header { position: relative; z-index: 10; }
+.brand { flex-shrink: 0; }
+.brand-dot { position: relative; top: .015em; }
+.header-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 15px; background: var(--accent); color: #090909; border: 1px solid var(--accent); border-radius: 10px; font-size: 13px; font-weight: 800; transition: background-color 180ms ease, border-color 180ms ease; }
+.header-cta:hover { background: #fff; border-color: var(--border); }
+.header-cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.nav-link { position: relative; padding: 8px 0; font-weight: 700; }
+.nav-link.active::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); border-radius: 2px; }
+.site-footer { display: grid; grid-template-columns: 1fr auto; gap: 32px; padding: 35px 0 22px; align-items: start; }
+.footer-main { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.footer-brand-group { color: var(--foreground); gap: 9px; }
+.footer-wordmark { font-size: 23px; letter-spacing: -.06em; line-height: 1.1; }
+.footer-tagline { margin: 0; color: var(--muted); font-size: 13px; }
+.footer-links { display: flex; align-items: center; gap: 26px; font-size: 13px; font-weight: 700; color: var(--foreground); }
+.footer-links a:hover { color: var(--accent); }
+.footer-bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 14px; padding-top: 22px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+@media (max-width: 760px) {
+  .site-header { gap: 10px; }
+  .header-actions { gap: 8px; }
+  .header-cta { display: none; }
+  .mobile-nav { position: relative; z-index: 9; background: var(--background); padding: 14px 0 20px; }
+  .mobile-nav-link { display: block; padding: 14px 12px; border-radius: 9px; color: var(--foreground); font-weight: 700; }
+  .mobile-nav-link.active { background: var(--surface); box-shadow: inset 3px 0 var(--accent); }
+  .mobile-nav-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .site-footer { display: grid; grid-template-columns: 1fr; gap: 22px; padding: 32px 0 24px; }
+  .footer-links { flex-wrap: wrap; gap: 14px 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; }
+}
+@media (max-width: 400px) { .market-label { display: none; } }
+
+/* Feature 01 refinements: consistent accent-outline hover and active navigation. */
+.icon-button, .api-retry, .button-secondary, .mobile-nav-link, .footer-links a {
+  box-shadow: none;
+  transition: border-color 180ms ease, outline-color 180ms ease, color 180ms ease, background-color 180ms ease;
+}
+.icon-button:hover:not(:disabled), .api-retry:hover:not(:disabled), .button-secondary:hover:not(:disabled) {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+.nav-link.active { color: var(--foreground); }
+.mobile-nav-link { position: relative; border-bottom: 2px solid transparent; border-radius: 0; }
+.mobile-nav-link.active { background: transparent; box-shadow: none; border-bottom-color: var(--accent); color: var(--foreground); }
+.mobile-nav-link:hover:not(.active) { outline: 1px solid var(--accent); outline-offset: -1px; }
+.footer-links a { border: 1px solid transparent; border-radius: 6px; padding: 5px 7px; }
+.footer-links a:hover { border-color: var(--accent); color: var(--foreground); }
+/* No decorative shadow on interactive surfaces. */
+.header-cta, .button, .icon-button { box-shadow: none; }
