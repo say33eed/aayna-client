@@ -1,7 +1,7 @@
 export type HealthResponse = {
   success: boolean;
   message: string;
-  data: { service: string; status: string };
+  data: { service: string; status: string; database?: "connected" | "disconnected" };
 };
 
 const FALLBACK_API_URL = "https://aayna-server.onrender.com";
@@ -22,7 +22,7 @@ export async function apiRequest<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 90000);
   const { signal, ...rest } = options;
   const abortFromCaller = () => controller.abort();
   signal?.addEventListener("abort", abortFromCaller, { once: true });

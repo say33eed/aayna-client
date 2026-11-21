@@ -1,109 +1,32 @@
-
 "use client";
-
-import { useCallback, useEffect, useState } from "react";
-import {
-  RefreshCw,
-  CheckCircle2,
-  CircleAlert,
-  LoaderCircle,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { RefreshCw, CheckCircle2, CircleAlert, LoaderCircle } from "lucide-react";
 import { getApiHealth } from "@/lib/api";
-
-type ConnectionState =
-  | "checking"
-  | "connected"
-  | "unavailable";
-
+type Status = "checking" | "connected" | "unavailable" | "unverified";
+function StatusRow({ label, status }: { label: string; status: Status }) {
+  const Icon = status === "connected" ? CheckCircle2 : status === "checking" ? LoaderCircle : CircleAlert;
+  return <div className="api-status-copy"><Icon size={17} className={status === "checking" ? "api-status-spin" : undefined} aria-hidden="true"/><div><p className="api-status-heading">{label}</p><p className="api-status-detail">{status}</p></div></div>;
+}
 export function ApiStatus() {
-  const [status, setStatus] =
-    useState<ConnectionState>("checking");
-
-  const [detail, setDetail] = useState("");
-
-  const check = useCallback(async () => {
-    setStatus("checking");
-    setDetail("");
-
-    try {
-      await getApiHealth();
-      setStatus("connected");
-    } catch (error) {
-      setStatus("unavailable");
-      setDetail(
-        error instanceof Error
-          ? error.message
-          : "Unknown error.",
-      );
-    }
-  }, []);
-
+  const [attempt, setAttempt] = useState(0);
+  const [result, setResult] = useState<{ attempt: number; backend: Status; database: Status } | null>(null);
   useEffect(() => {
-    void getApiHealth().then(
-      () => setStatus("connected"),
-      (error: unknown) => {
-        setStatus("unavailable");
-        setDetail(
-          error instanceof Error
-            ? error.message
-            : "Unknown error.",
-        );
-      },
-    );
-  }, []);
-
-  return (
-    <section
-      className="api-status"
-      aria-label="API connection status"
-    >
-      <div className="api-status-copy">
-        {status === "checking" ? (
-          <LoaderCircle
-            size={17}
-            className="api-status-spin"
-            aria-hidden="true"
-          />
-        ) : status === "connected" ? (
-          <CheckCircle2
-            size={17}
-            aria-hidden="true"
-          />
-        ) : (
-          <CircleAlert
-            size={17}
-            aria-hidden="true"
-          />
-        )}
-
-        <div>
-          <p className="api-status-heading">
-            {status === "checking"
-              ? "Checking API connection"
-              : status === "connected"
-                ? "API connected"
-                : "API unavailable"}
-          </p>
-
-          <p className="api-status-detail">
-            {status === "checking"
-              ? "Contacting the AAYNA backend…"
-              : status === "connected"
-                ? "Frontend and backend are communicating."
-                : detail}
-          </p>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        className="api-retry"
-        onClick={() => void check()}
-        disabled={status === "checking"}
-      >
-        <RefreshCw size={15} aria-hidden="true" />
-        Retry
-      </button>
-    </section>
-  );
+    let active = true;
+    void getApiHealth().then(data => {
+      if (active) setResult({ attempt, backend: "connected", database: data.data.database === "connected" ? "connected" : data.data.database === "disconnected" ? "unavailable" : "unverified" });
+    }, () => {
+      if (active) setResult({ attempt, backend: "unavailable", database: "unverified" });
+    });
+    return () => { active = false; };
+  }, [attempt]);
+  const current = result?.attempt === attempt ? result : null;
+  return <section className="api-status" aria-label="System connectivity" style={{alignItems: "flex-start"}}>
+    <div style={{display: "grid", gap: 16}} aria-live="polite">
+      <p className="api-status-heading">System connectivity</p>
+      <StatusRow label="Frontend" status="connected" />
+      <StatusRow label="Backend" status={current?.backend ?? "checking"} />
+      <StatusRow label="Database" status={current?.database ?? "unverified"} />
+    </div>
+    <button type="button" className="api-retry" disabled={!current} onClick={() => setAttempt(n => n + 1)}><RefreshCw size={15} aria-hidden="true"/> Retry</button>
+  </section>;
 }
