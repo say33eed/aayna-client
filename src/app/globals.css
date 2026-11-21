@@ -88,3 +88,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 @keyframes api-spin { to { transform: rotate(360deg); } }
 @media (max-width: 480px) { .api-status { align-items: flex-start; flex-direction: column; } }
 @media (prefers-reduced-motion: reduce) { .api-status-spin { animation: none; } }
+
+.operation-prompt,.operation-toast { background:var(--surface); color:var(--foreground); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:0 8px 32px #0003; }
+.operation-prompt { position:fixed; z-index:80; bottom:24px; left:50%; transform:translateX(-50%); width:min(420px,calc(100% - 32px)); }
+.operation-prompt p,.operation-toast p { color:var(--muted); font-size:14px; margin:8px 0; overflow-wrap:anywhere; }
+.operation-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+.operation-toasts { position:fixed; z-index:90; top:16px; right:16px; width:min(360px,calc(100% - 32px)); display:grid; gap:8px; pointer-events:none; }
+.operation-toast { display:flex; justify-content:space-between; gap:12px; pointer-events:auto; }
+.operation-toast .icon-button { flex-shrink:0; }

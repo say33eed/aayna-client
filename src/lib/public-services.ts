@@ -1,7 +1,7 @@
-import { API_BASE_URL } from "./api";
+import { ApiError, API_BASE_URL } from "./api";
 import { ensureConnection } from "./connection";
 export type Service = { _id: string; serviceName: string; category: string; description: string; price: number; duration: number; image: string };
-type Entry = { savedAt: number; tag: string; rows: Service[] };
+export type Entry = { savedAt: number; tag: string; rows: Service[] };
 const key = `aayna:public-services:v1:${API_BASE_URL}`;
 let memory: Entry | undefined;
 let pending: Promise<Entry> | undefined;
@@ -25,7 +25,7 @@ export function loadServices(force = false): Promise<Entry> {
       if (response.status === 304 && previous) entry = { ...previous, savedAt: Date.now() };
       else {
         const body = await response.json();
-        if (!response.ok || body.success !== true || !Array.isArray(body.data)) throw new Error(typeof body.message === "string" ? body.message : "Unable to load services.");
+        if (!response.ok || body.success !== true || !Array.isArray(body.data)) throw new ApiError(typeof body?.message === "string" ? body.message : "Unable to load services.", !response.ok ? response.status : undefined);
         entry = { rows: body.data, savedAt: Date.now(), tag: response.headers.get("ETag") || "" };
       }
       memory = entry;

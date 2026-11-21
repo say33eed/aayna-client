@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
 import "./globals.css";
+import { OperationFeedback } from "@/components/operation-feedback";
 
 const geist = Geist({ subsets: ["latin"], display: "swap" });
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className={geist.className}><SiteShell>{children}</SiteShell></body>
+      <body className={geist.className}><SiteShell>{children}</SiteShell><OperationFeedback /></body>
     </html>
   );
 }

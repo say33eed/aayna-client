@@ -1,19 +1,31 @@
 "use client";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { cachedServices, loadServices, type Service } from "@/lib/public-services";
+import { runOperation } from "@/lib/operations";
 export function ServiceCatalog() {
   const [rows, setRows] = useState<Service[]>([]);
   const [hasData, setHasData] = useState(false);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState("");
   const mounted = useRef(false);
+  const manual = useRef<AbortController | null>(null);
   const refresh = useCallback(async (force = false) => {
+    if (manual.current) return;
+    const controller = force ? new AbortController() : null;
+    if (controller) manual.current = controller;
     setBusy(true); setError("");
     const cached = cachedServices();
     if (cached) { setRows(cached.rows); setHasData(true); }
-    try { const result = await loadServices(force); if (mounted.current) { setRows(result.rows); setHasData(true); } }
+    try {
+      const result = force ? await runOperation("refresh-services", async () => {
+        const entry = await loadServices(true);
+        return { success: true, message: cached?.tag && cached.tag === entry.tag ? "Services are up to date." : "Services refreshed.", data: entry };
+      }, controller?.signal) : { success: true as const, data: await loadServices() };
+      if (mounted.current && result?.success) { setRows(result.data.rows); setHasData(true); }
+      if (mounted.current && result && !result.success) setError(result.message);
+    }
     catch (e) { if (mounted.current) setError(e instanceof Error ? e.message : "Unable to load services."); }
-    finally { if (mounted.current) setBusy(false); }
+    finally { if (controller) manual.current = null; if (mounted.current) setBusy(false); }
   }, []);
   useEffect(() => {
     mounted.current = true;
@@ -21,7 +33,7 @@ export function ServiceCatalog() {
     const initial = setTimeout(check, 0);
     const interval = setInterval(check, 300000);
     window.addEventListener("focus", check);
-    return () => { mounted.current = false; clearTimeout(initial); clearInterval(interval); window.removeEventListener("focus", check); };
+    return () => { mounted.current = false; manual.current?.abort(); clearTimeout(initial); clearInterval(interval); window.removeEventListener("focus", check); };
   }, [refresh]);
   return <div aria-busy={busy}>
     {busy && <p role="status">{hasData ? "Checking for updates…" : "Connecting and loading services…"}</p>}
