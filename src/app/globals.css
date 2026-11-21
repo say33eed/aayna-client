@@ -74,3 +74,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
   .site-footer { min-height: 88px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+
+/* v004: quiet, monochrome API connection status */
+.api-status { margin-top: 44px; width: min(100%, 550px); display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.api-status-copy { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.api-status-copy > svg { flex-shrink: 0; margin-top: 2px; }
+.api-status-heading { font-size: 13px; font-weight: 600; margin: 0 0 4px; }
+.api-status-detail { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+.api-retry { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; background: transparent; color: var(--foreground); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; font-size: 12px; }
+.api-retry:disabled { opacity: .5; cursor: not-allowed; }
+.api-retry:hover:not(:disabled) { border-color: var(--muted); }
+.api-status-spin { animation: api-spin 1.2s linear infinite; }
+@keyframes api-spin { to { transform: rotate(360deg); } }
+@media (max-width: 480px) { .api-status { align-items: flex-start; flex-direction: column; } }
+@media (prefers-reduced-motion: reduce) { .api-status-spin { animation: none; } }
