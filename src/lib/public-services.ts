@@ -1,8 +1,8 @@
 import { ApiError, API_BASE_URL } from "./api";
 import { ensureConnection } from "./connection";
-export type Service = { _id: string; serviceName: string; category: string; description: string; price: number; duration: number; image: string };
+export type Service = { _id: string; serviceName: string; category: string; description: string; price: number; duration: number; image: string; images?: string[] };
 export type Entry = { savedAt: number; tag: string; rows: Service[] };
-const key = `aayna:public-services:v1:${API_BASE_URL}`;
+const key = `aayna:public-services:v2:${API_BASE_URL}`;
 let memory: Entry | undefined;
 let pending: Promise<Entry> | undefined;
 export function cachedServices(): Entry | undefined {

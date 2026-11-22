@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowUpRight, CalendarDays, Clock3, ShieldCheck } from "luci
 import { authClient } from "@/lib/auth-client";
 import { loadServices, type Service } from "@/lib/public-services";
 
-const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", maximumFractionDigits: 0 });
+const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 type Slot = { time: string; available: boolean };
 const today = () => {
   const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Dhaka", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
@@ -31,7 +31,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
   const [refreshSlots, setRefreshSlots] = useState(0);
 
   useEffect(() => {
-    if (!session?.user || user?.role !== "customer" || user.isBlocked) return;
+    if (!session?.user || user.isBlocked) return;
     let active = true;
     void loadServices(true).then((entry) => {
       if (!active) return;
@@ -81,7 +81,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
   if (isPending) return <main className="aayna-booking-gate" role="status">Checking your account…</main>;
   if (!session?.user) return <main className="aayna-booking-gate"><p className="aayna-featured-kicker">MEMBERS ONLY</p><h1>Sign in to continue.</h1><p>Service details and appointment requests are available to AAYNA customers.</p><Link href={`/sign-in?next=${encodeURIComponent(`/services/${id}`)}`} className="aayna-booking-primary">Sign in <ArrowUpRight size={18} /></Link><Link href="/services">Browse all services</Link></main>;
   if (user?.isBlocked) return <main className="aayna-booking-gate"><h1>Account access restricted.</h1><p>Contact support for assistance.</p></main>;
-  if (user?.role !== "customer") return <main className="aayna-booking-gate"><h1>Customer access only.</h1><p>Administrator accounts cannot request appointments.</p><Link href="/services">Back to services</Link></main>;
+  
 
   return <main className="aayna-booking-page">
     <Link href="/services" className="aayna-booking-back"><ArrowLeft size={17} /> All services</Link>
@@ -99,7 +99,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
         <div className="aayna-booking-facts"><strong>{money.format(service.price)}</strong><span><Clock3 size={17} /> {service.duration} minutes</span></div>
         <div className="aayna-booking-note"><ShieldCheck size={19} /><span>Request now. Payment is available only after admin confirmation.</span></div>
       </section>
-      <section className="aayna-booking-panel" aria-labelledby="aayna-booking-form-title">
+      {user?.role === "customer" ? <section className="aayna-booking-panel" aria-labelledby="aayna-booking-form-title">
         <p className="aayna-featured-kicker">YOUR APPOINTMENT</p>
         <h2 id="aayna-booking-form-title">Choose a time that works.</h2>
         <p className="aayna-booking-subtitle">Send a request. We&apos;ll update its status after review.</p>
@@ -121,7 +121,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
             <button className="aayna-booking-primary" disabled={submitState === "sending" || !slot || !date || slotsState !== "ready"} type="submit">{submitState === "sending" ? "Submitting…" : "Request appointment"}<ArrowUpRight size={18} /></button>
             <p className="aayna-booking-hint">Your request will be Pending and Unpaid until reviewed.</p>
           </form>}
-      </section>
+      </section> : <section className="aayna-booking-panel"><h2>Service preview</h2><p>Administrators can review service information here. Appointment booking is reserved for customers.</p></section>}
     </div>}
   </main>;
 }

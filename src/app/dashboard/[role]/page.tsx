@@ -8,7 +8,7 @@ type Session = { user?: { name?: string; email?: string; role?: string; isBlocke
 export default async function Dashboard({ params, searchParams }: { params: Promise<{ role: string }>; searchParams: Promise<{ view?: string }> }) {
   const { role } = await params;
   const { view } = await searchParams;
-  const activeView = view === "appointments" && role === "customer" ? "appointments" : "overview";
+  const activeView = view === "appointments" && (role === "customer" || role === "admin") ? "appointments" : view === "services" && role === "admin" ? "services" : "overview";
   if (role !== "customer" && role !== "admin") notFound();
   let session: Session;
   try {
@@ -47,13 +47,25 @@ export default async function Dashboard({ params, searchParams }: { params: Prom
       const response = await fetch(`${API_BASE_URL}/api/appointments/mine`, {
         headers: { cookie: (await cookies()).toString() }, cache: "no-store",
       });
-      if (!response.ok) throw new Error("Unable to load appointments");
+      if (!response.ok) throw new Error(`Unable to load appointments (HTTP ${response.status}).`);
       const result = await response.json() as { success?: boolean; data?: Appointment[] };
       if (!result.success || !Array.isArray(result.data)) throw new Error("Invalid appointment list");
       appointments = result.data;
     } catch {
-      appointmentsError = "Your appointments are temporarily unavailable. Please try again.";
+      appointmentsError = "Unable to load appointments. Please retry; if this persists, check the backend API logs.";
     }
   }
-  return <DashboardShell role={actualRole} name={session.user.name || "Account"} email={session.user.email || ""} summary={summary} summaryError={summaryError} view={activeView} appointments={appointments} appointmentsError={appointmentsError} />;
+  type AdminOverview = { customers: number; activeServices: number; requests: number; pending: number; confirmed: number; successfulPayments: number; recent: { id: string; service: string; date: string; time: string; status: string; paymentStatus: string; createdAt: string }[] };
+  let adminOverview: AdminOverview | null = null;
+  let adminError = "";
+  if (actualRole === "admin") {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/overview`, { headers: { cookie: (await cookies()).toString() }, cache: "no-store" });
+      if (!response.ok) throw new Error("Admin statistics unavailable");
+      const result = await response.json() as { success?: boolean; data?: AdminOverview };
+      if (!result.success || !result.data || !Array.isArray(result.data.recent)) throw new Error("Invalid admin overview");
+      adminOverview = result.data;
+    } catch { adminError = "Unable to load live admin statistics. Please retry."; }
+  }
+  return <DashboardShell adminOverview={adminOverview} adminError={adminError} role={actualRole} name={session.user.name || "Account"} email={session.user.email || ""} summary={summary} summaryError={summaryError} view={activeView} appointments={appointments} appointmentsError={appointmentsError} />;
 }

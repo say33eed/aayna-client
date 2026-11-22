@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight, Clock3, RotateCw } from "lucide-react";
 import { loadServices, type Service } from "@/lib/public-services";
 
-const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", maximumFractionDigits: 0 });
+const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
 function ServiceCard({ service }: { service: Service }) {
   const [imageFailed, setImageFailed] = useState(false);

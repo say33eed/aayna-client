@@ -8,7 +8,7 @@ import { ArrowRight, ArrowUpRight, Clock3, Search, RotateCw, X } from "lucide-re
 import { loadServices, type Service } from "@/lib/public-services";
 
 const PAGE_SIZE = 9;
-const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", maximumFractionDigits: 0 });
+const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 type Sort = "default" | "price_asc" | "price_desc";
 
 function Card({ service }: { service: Service }) {

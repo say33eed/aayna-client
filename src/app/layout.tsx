@@ -3,6 +3,7 @@ import { Nunito_Sans, Quicksand, Hind_Siliguri } from "next/font/google";
 import { RouteFrame } from "@/components/route-frame";
 import "./globals.css";
 import "./dashboard-global.css";
+import "../components/dashboard/admin-services.css";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-nunito" });
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"], display: "swap", variable: "--font-wordmark" });

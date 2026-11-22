@@ -532,3 +532,10 @@ body:has([data-aayna-dashboard]) .site-shell { max-width:none; padding:0; margin
 body:has([data-aayna-dashboard]) .site-header, body:has([data-aayna-dashboard]) .site-shell > footer { display:none; }
 body:has([data-aayna-dashboard]) .site-container { max-width:none; width:100%; padding:0; margin:0; }
 body:has([data-aayna-dashboard]) .main-content { display:block; }
+
+/* Aayna public service gallery */
+.aaynaDetailGallery{margin:12px 0 24px}.aaynaDetailGallery_navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;font-size:12px}.aaynaDetailGallery_navigation button{border:1px solid currentColor;border-radius:100px;width:36px;height:36px;background:transparent;color:inherit;cursor:pointer}.aaynaDetailGallery_thumbs{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px}.aaynaDetailGallery_thumbs button{flex:0 0 74px;width:74px;height:74px;border:2px solid transparent;border-radius:12px;padding:3px;background:transparent;cursor:pointer}.aaynaDetailGallery_thumbs button.selected{border-color:currentColor}.aaynaDetailGallery_thumbs img{width:100%;height:100%;object-fit:cover;border-radius:7px}
+
+/* v0.51 — receipt actions */
+.aaynaReceipt_actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.aaynaReceipt_actions button,.aaynaReceipt_reopen{border:1px solid #111;border-radius:999px;padding:12px 19px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;background:#111;color:#fff}.aaynaReceipt_actions button+button{background:transparent;color:#111}.aaynaReceipt_actions button:hover,.aaynaReceipt_reopen:hover{opacity:.8}.aaynaReceipt_actions button:focus-visible,.aaynaReceipt_reopen:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+@media(prefers-color-scheme:dark){.aaynaReceipt_page{color-scheme:light}}
