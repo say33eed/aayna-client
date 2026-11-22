@@ -40,9 +40,24 @@ function subscribeToTheme(callback: () => void) {
 }
 
 function Identity({ image, initials }: { image?: string | null; initials: string }) {
+  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const url = image?.trim() || "";
+  // Only load web images. Invalid or inaccessible URLs fall back to initials.
+  const validUrl = /^https?:\/\//i.test(url) ? url : "";
+  const showImage = Boolean(validUrl && failedImage !== validUrl);
+
   return (
     <span className="inline-flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--foreground)] text-xs font-extrabold text-[var(--background)]" aria-hidden="true">
-      {image ? <img src={image} alt="" className="size-full object-cover" /> : initials}
+      {showImage ? (
+        <img
+          key={validUrl}
+          src={validUrl}
+          alt=""
+          referrerPolicy="no-referrer"
+          className="size-full object-cover"
+          onError={() => setFailedImage(validUrl)}
+        />
+      ) : initials}
     </span>
   );
 }
