@@ -1,9 +1,10 @@
 "use client";
 
 import { createAuthClient } from "better-auth/react";
-import { API_BASE_URL } from "@/lib/api";
 
+// Better Auth is reached through this Next.js origin, never directly through
+// Render. The same-origin browser cookie is then available to SSR dashboards.
 export const authClient = createAuthClient({
-  baseURL: API_BASE_URL,
-  fetchOptions: { credentials: "include" },
+  baseURL: typeof window === "undefined" ? "http://localhost:3000" : window.location.origin,
+  fetchOptions: { credentials: "same-origin" },
 });

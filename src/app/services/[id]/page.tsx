@@ -5,7 +5,6 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, CalendarDays, Clock3, ShieldCheck } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { API_BASE_URL } from "@/lib/api";
 import { loadServices, type Service } from "@/lib/public-services";
 
 const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", maximumFractionDigits: 0 });
@@ -48,7 +47,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
     const controller = new AbortController();
     // Resetting the slot happens in the date change handler; fetch starts asynchronously.
     const start = window.setTimeout(() => setSlotsState("loading"), 0);
-    void fetch(`${API_BASE_URL}/api/appointments/slots?serviceId=${encodeURIComponent(id)}&date=${encodeURIComponent(date)}`, { signal: controller.signal, cache: "no-store" })
+    void fetch(`/api/appointments/slots?serviceId=${encodeURIComponent(id)}&date=${encodeURIComponent(date)}`, { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
         const body = await response.json();
         if (!response.ok || !body.success || !Array.isArray(body.data)) throw new Error(body.message || "Time slots are unavailable.");
@@ -63,7 +62,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
     if (!service || !date || !slot || submitState === "sending") return;
     setSubmitState("sending"); setNotice("");
     try {
-      const response = await fetch(`${API_BASE_URL}/api/appointments`, {
+      const response = await fetch(`/api/appointments`, {
         method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ serviceId: id, appointmentDate: date, timeSlot: slot, message }),
       });
