@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Pause, Play } from "lucide-react";
 import { FeaturedServices } from "@/components/featured-services";
+import { ServiceCategories } from "@/components/service-categories";
 
 
 const HEADLINES = [
@@ -85,6 +86,7 @@ export default function Home() {
       </button>
     </section>
     <FeaturedServices />
+    <ServiceCategories />
     </>
   );
 }

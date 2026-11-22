@@ -1,8 +1,11 @@
 "use client";
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { cachedServices, loadServices, type Service } from "@/lib/public-services";
 import { runOperation } from "@/lib/operations";
 export function ServiceCatalog() {
+  const params = useSearchParams();
+  const selectedCategory = params.get("category") || "";
   const [rows, setRows] = useState<Service[]>([]);
   const [hasData, setHasData] = useState(false);
   const [busy, setBusy] = useState(true);
@@ -40,6 +43,8 @@ export function ServiceCatalog() {
     {error && <p role="alert">{error} {hasData && "Showing previously saved services."}</p>}
     <button className="api-retry" disabled={busy} onClick={() => void refresh(true)}>Refresh services</button>
     {hasData && rows.length === 0 && <p>No active services are available yet.</p>}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16,marginTop:24}}>{rows.map(row => <article key={row._id} style={{border:"1px solid currentColor",borderRadius:16,padding:20}}><p className="eyebrow">{row.category}</p><h2>{row.serviceName}</h2><p>{row.description}</p><p>৳{row.price} · {row.duration} min</p></article>)}</div>
+    {selectedCategory && <p className="aayna-category-filterNotice">Showing services in <strong>{selectedCategory}</strong>. <a href="/services">Clear filter</a></p>}
+    {hasData && selectedCategory && !rows.some((row) => row.category === selectedCategory) && <p>No active services found in this category.</p>}
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16,marginTop:24}}>{rows.filter((row) => !selectedCategory || row.category === selectedCategory).map(row => <article key={row._id} style={{border:"1px solid currentColor",borderRadius:16,padding:20}}><p className="eyebrow">{row.category}</p><h2>{row.serviceName}</h2><p>{row.description}</p><p>৳{row.price} · {row.duration} min</p></article>)}</div>
   </div>;
 }
