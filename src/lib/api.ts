@@ -6,9 +6,11 @@ export type HealthResponse = {
 
 const FALLBACK_API_URL = "https://aayna-server.onrender.com";
 
-export const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_URL || FALLBACK_API_URL
-).replace(/\/+$/, "");
+// Browser requests stay on the frontend origin so Better Auth session cookies
+// accompany protected API calls. Server-side rendering retains the backend URL.
+export const API_BASE_URL = typeof window === "undefined"
+  ? (process.env.NEXT_PUBLIC_API_URL || FALLBACK_API_URL).replace(/\/+$/, "")
+  : "";
 
 export class ApiError extends Error {
   constructor(message: string, public readonly status?: number) {
@@ -55,7 +57,9 @@ export async function apiRequest<T>(
 }
 
 export async function getApiHealth(signal?: AbortSignal): Promise<HealthResponse> {
-  const result = await apiRequest<HealthResponse>("/health", { signal });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || FALLBACK_API_URL}/health`, { signal, cache: "no-store" });
+  if (!response.ok) throw new ApiError(`Health check returned HTTP ${response.status}.`, response.status);
+  const result = (await response.json()) as HealthResponse;
   if (
     result?.success !== true ||
     result.data?.service !== "aayna-server" ||
