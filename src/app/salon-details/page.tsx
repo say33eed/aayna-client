@@ -15,7 +15,7 @@ export default async function SalonDetailsEntry() {
     if (!response.ok) throw new Error("Auth service unavailable");
     session = await response.json();
   } catch {
-    return <section className="inner-page"><h1>Unable to verify your session</h1><p className="inner-description">Check that AAYNA's local API is running, then try again.</p></section>;
+    return <section className="inner-page"><h1>Unable to verify your session</h1><p className="inner-description">Check that AAYNA&apos;s local API is running, then try again.</p></section>;
   }
   if (!session?.user) redirect("/sign-in");
   if (session.user.isBlocked) redirect("/");

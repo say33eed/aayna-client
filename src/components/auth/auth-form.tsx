@@ -43,7 +43,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
       }
       setSuccess(register ? "Account created successfully." : "Signed in successfully.");
       const role = result.data?.user && "role" in result.data.user && result.data.user.role === "admin" ? "admin" : "customer";
-      router.replace(`/dashboard/${role}`);
+      const requested = new URLSearchParams(window.location.search).get("next");
+      const safeNext = requested && /^\/services\/[a-f0-9]{24}$/i.test(requested) && role === "customer" ? requested : null;
+      router.replace(safeNext ?? `/dashboard/${role}`);
       router.refresh();
     } catch {
       setError("Could not reach the authentication service. Please try again.");

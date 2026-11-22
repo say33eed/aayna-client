@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- Avatar images may use user-supplied external hosts. */
 "use client";
 
 import Link from "next/link";
@@ -53,7 +54,6 @@ export function Navbar() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
   const blocked = Boolean(user && "isBlocked" in user && user.isBlocked === true);
-  const authenticated = Boolean(user && !blocked);
   const admin = Boolean(user && "role" in user && user.role === "admin");
   const dashboardHref = admin ? "/dashboard/admin" : "/dashboard/customer";
   const fullName = user?.name?.trim() || "Account";
@@ -76,8 +76,12 @@ export function Navbar() {
   }, [theme]);
 
   useEffect(() => {
-    setMobileOpen(false);
-    setAccountOpen(false);
+    // Close open menus after navigation without a synchronous effect update.
+    const task = window.setTimeout(() => {
+      setMobileOpen(false);
+      setAccountOpen(false);
+    }, 0);
+    return () => window.clearTimeout(task);
   }, [pathname]);
 
   useEffect(() => {

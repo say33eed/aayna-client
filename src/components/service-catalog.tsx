@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- Service images use variable remote hosts. */
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -17,7 +18,6 @@ function Card({ service }: { service: Service }) {
     <div className="aayna-browse-photo">
       {image && !imageFailed ? (
         // Images originate from service records; their external hosts are not fixed.
-        // eslint-disable-next-line @next/next/no-img-element
         <img src={image} alt={service.serviceName || "Salon service"} loading="lazy" onError={() => setImageFailed(true)} />
       ) : <span className="aayna-browse-photoFallback">AAYNA</span>}
       <span className="aayna-browse-photoCategory">{service.category || "Salon service"}</span>
@@ -56,7 +56,10 @@ export function ServiceCatalog() {
     router.replace(suffix ? `${pathname}?${suffix}` : pathname, { scroll: false });
   }, [params, pathname, router]);
 
-  useEffect(() => { setQuery(search); }, [search]);
+  useEffect(() => {
+    const task = window.setTimeout(() => setQuery(search), 0);
+    return () => window.clearTimeout(task);
+  }, [search]);
   useEffect(() => {
     const timeout = window.setTimeout(() => { if (query !== search) update({ search: query.trim(), page: null }); }, 350);
     return () => window.clearTimeout(timeout);
@@ -74,7 +77,11 @@ export function ServiceCatalog() {
       setState("error");
     }
   }, []);
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    // Defer the initial refresh so its loading state is not set during effect setup.
+    const task = window.setTimeout(() => { void refresh(); }, 0);
+    return () => window.clearTimeout(task);
+  }, [refresh]);
 
   const categories = useMemo(() => [...new Set(rows.map((s) => s.category?.trim()).filter((c): c is string => Boolean(c)))].sort((a,b) => a.localeCompare(b)), [rows]);
   const filtered = useMemo(() => {

@@ -4,7 +4,6 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ApiStatus } from "@/components/api-status";
 import "./globals.css";
-import { OperationFeedback } from "@/components/operation-feedback";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-nunito" });
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"], display: "swap", variable: "--font-wordmark" });

@@ -1,9 +1,10 @@
+/* eslint-disable @next/next/no-img-element -- Service images use variable remote hosts. */
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Clock3, RotateCw } from "lucide-react";
-import { cachedServices, loadServices, type Service } from "@/lib/public-services";
+import { loadServices, type Service } from "@/lib/public-services";
 
 const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", maximumFractionDigits: 0 });
 
@@ -15,7 +16,6 @@ function ServiceCard({ service }: { service: Service }) {
       <div className="aayna-featured-media">
         {image && !imageFailed ? (
           // External salon images can come from different providers, so avoid a fixed Next.js remote-host allowlist.
-          // eslint-disable-next-line @next/next/no-img-element
           <img src={image} alt={service.serviceName || "Salon service"} loading="lazy" onError={() => setImageFailed(true)} />
         ) : (
           <div className="aayna-featured-imageFallback" aria-label="Service image unavailable">AAYNA</div>
@@ -60,9 +60,6 @@ export function FeaturedServices() {
 
   useEffect(() => {
     let active = true;
-    // Show cached data immediately only while the active-service list is refreshed.
-    const cached = cachedServices();
-    if (cached?.rows?.length) setServices(cached.rows.filter((s) => Boolean(s._id)).slice(0, 6));
     void loadServices(true).then((entry) => {
       if (!active) return;
       setServices(entry.rows.filter((s) => Boolean(s._id)).slice(0, 6));
