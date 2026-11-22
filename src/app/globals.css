@@ -26,7 +26,7 @@ body { font-family: var(--font-nunito), var(--font-bangla), sans-serif; margin: 
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
 a, button { -webkit-tap-highlight-color: transparent; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .site-shell { max-width: 1440px; min-height: 100vh; margin: 0 auto; padding: 0 clamp(24px, 6vw, 96px); display: flex; flex-direction: column; }
 .site-header { height: 88px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 27px; font-weight: 700; letter-spacing: -1.8px; white-space: nowrap; }
@@ -36,7 +36,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 
 .header-actions { display: flex; align-items: center; gap: 12px; }
 .market-label { color: var(--muted); font-size: 13px; margin-right: 8px; white-space: nowrap; }
-.icon-button { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px; color: var(--foreground); background: var(--surface); }
+.icon-button { width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--border); border-radius: 10px; color: var(--foreground); background: var(--surface); }
 .mobile-menu-button, .mobile-nav { display: none; }
 .main-content { flex: 1; display: flex; flex-direction: column; }
 .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 850px; padding: 104px 0 130px; }
@@ -79,7 +79,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .api-status-copy > svg { flex-shrink: 0; margin-top: 2px; }
 .api-status-heading { font-size: 13px; font-weight: 600; margin: 0 0 4px; }
 .api-status-detail { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
-.api-retry { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; background: transparent; color: var(--foreground); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; font-size: 12px; }
+.api-retry { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; background: transparent; color: var(--foreground); border: 2px solid var(--border); border-radius: 8px; padding: 9px 11px; font-size: 12px; }
 .api-retry:disabled { opacity: .5; cursor: not-allowed; }
 .api-status-spin { animation: api-spin 1.2s linear infinite; }
 @keyframes api-spin { to { transform: rotate(360deg); } }
@@ -98,7 +98,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 :root { --accent: #FF5100; --accent-foreground: #090909; }
 :lang(bn) { font-family: var(--font-bangla), var(--font-nunito), sans-serif; }
 .brand { font-weight: 800; }
-.button-primary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.button-primary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 /* Wordmark-only accent dot, including footer. */
 .footer-wordmark { font-weight: 800; letter-spacing: -.035em; color: var(--foreground); }
@@ -115,7 +115,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .site-header { position: relative; z-index: 10; }
 .brand { flex-shrink: 0; }
 .brand-dot { position: relative; top: .015em; }
-.header-cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.header-cta:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 
 .site-footer { display: grid; grid-template-columns: 1fr auto; gap: 32px; padding: 35px 0 22px; align-items: start; }
@@ -210,7 +210,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .button-primary, .header-cta {
   background: #FF5100;
   color: var(--accent-button-text);
-  border: 1px solid #FF5100;
+  border: 2px solid #FF5100;
   box-shadow: none;
   transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
@@ -231,7 +231,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
   font-weight: 800;
 }
 .button-secondary {
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   background: var(--surface);
   color: var(--foreground);
   box-shadow: none;
@@ -242,7 +242,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 }
 /* Preserve visible keyboard focus for accessibility. */
 .nav-link:focus-visible, .mobile-nav-link:focus-visible, .footer-links a:focus-visible, .text-link:focus-visible {
-  outline: 2px solid #FF5100;
+  outline: 3px solid #FF5100;
   outline-offset: 4px;
 }
 
@@ -318,7 +318,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--foreground); ou
 .desktop-nav .nav-link:focus-visible,
 .mobile-nav .nav-link:focus-visible,
 .site-footer .footer-links a:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--accent);
   outline-offset: 4px;
 }
 @media (max-width: 760px) {
