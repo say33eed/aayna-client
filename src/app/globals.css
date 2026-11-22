@@ -364,3 +364,48 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outlin
   .aayna-motionButton { right: 20px; bottom: 20px; }
 }
 @media (prefers-reduced-motion: reduce) { .aayna-headline { animation: none; } .aayna-cta { transition: none; } .aayna-video { display: none; } }
+
+
+/* AAYNA / Featured Salon Services — isolated homepage section */
+.aayna-featured { background: var(--background); color: var(--foreground); padding: clamp(72px, 8vw, 120px) 24px; }
+.aayna-featured-inner { max-width: 1200px; margin: 0 auto; }
+.aayna-featured-heading { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin-bottom: 36px; }
+.aayna-featured-kicker { margin: 0 0 16px; font-size: 11px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.aayna-featured-heading h2 { max-width: 750px; margin: 0; font-size: clamp(32px, 4vw, 54px); letter-spacing: -.055em; line-height: 1.12; font-weight: 800; }
+.aayna-featured-intro { margin: 16px 0 0; font-size: 15px; line-height: 1.7; color: var(--muted); }
+.aayna-featured-browse, .aayna-featured-detail { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 2px solid var(--foreground); border-radius: 999px; color: var(--foreground); text-decoration: none; font-size: 13px; font-weight: 800; white-space: nowrap; min-height: 44px; padding: 0 19px; transition: background .2s,color .2s; }
+.aayna-featured-browse:hover, .aayna-featured-detail:hover { background: var(--foreground); color: var(--background); }
+.aayna-featured-browse:focus-visible, .aayna-featured-detail:focus-visible, .aayna-featured-state button:focus-visible, .aayna-service-back:focus-visible { outline: 3px solid #FF5100; outline-offset: 4px; }
+.aayna-featured-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 26px; }
+.aayna-featured-card { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); display: flex; flex-direction: column; }
+.aayna-featured-media { height: 240px; overflow: hidden; background: var(--border); }
+.aayna-featured-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+.aayna-featured-card:hover .aayna-featured-media img { transform: scale(1.035); }
+.aayna-featured-imageFallback { display: grid; place-items: center; width: 100%; height: 100%; color: var(--muted); font-size: 23px; letter-spacing: .2em; font-weight: 800; }
+.aayna-featured-cardBody { display: flex; flex-direction: column; align-items: start; flex: 1; padding: 23px; }
+.aayna-featured-category { margin: 0 0 8px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .11em; }
+.aayna-featured-card h3 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.035em; line-height: 1.3; }
+.aayna-featured-description { margin: 12px 0 20px; color: var(--muted); line-height: 1.6; font-size: 13px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.aayna-featured-meta { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; width: 100%; gap: 12px; padding-bottom: 19px; font-size: 14px; }
+.aayna-featured-meta span, .aayna-service-detailMeta span { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); }
+.aayna-featured-detail { width: 100%; }
+.aayna-featured-skeleton { height: 420px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); animation: aayna-featured-pulse 1.4s ease-in-out infinite alternate; }
+@keyframes aayna-featured-pulse { from { opacity: .6; } to { opacity: 1; } }
+.aayna-featured-state { padding: 55px 24px; text-align: center; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); }
+.aayna-featured-state button { margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--foreground); cursor: pointer; }
+.aayna-service-detailPage { max-width: 950px; margin: 0 auto; padding: 70px 24px 110px; }
+.aayna-service-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 36px; color: var(--muted); }
+.aayna-service-detailPage h1 { font-size: clamp(34px, 5vw, 60px); line-height: 1.12; letter-spacing: -.05em; margin: 0 0 18px; }
+.aayna-service-detailPage > p:not(.aayna-featured-kicker) { color: var(--muted); line-height: 1.7; }
+.aayna-service-detailMeta { display: flex; align-items: center; gap: 24px; margin: 24px 0; }
+.aayna-service-detailImage { max-height: 480px; border-radius: 20px; overflow: hidden; }
+.aayna-service-detailImage img { display: block; width: 100%; max-height: 480px; object-fit: cover; }
+@media (max-width: 950px) { .aayna-featured-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 640px) {
+  .aayna-featured { padding: 68px 18px; }
+  .aayna-featured-heading { align-items: start; flex-direction: column; }
+  .aayna-featured-grid { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .aayna-featured-media { height: 230px; }
+  .aayna-featured-browse { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .aayna-featured-media img { transition: none; } .aayna-featured-card:hover .aayna-featured-media img { transform: none; } .aayna-featured-skeleton { animation: none; } }

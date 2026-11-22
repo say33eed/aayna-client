@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Pause, Play } from "lucide-react";
+import { FeaturedServices } from "@/components/featured-services";
 
 
 const HEADLINES = [
@@ -49,6 +50,7 @@ export default function Home() {
   };
 
   return (
+    <>
     <section className="aayna-motion" aria-label="Discover salon services">
       <video
         ref={videoRef}
@@ -82,5 +84,7 @@ export default function Home() {
         {playing ? <Pause size={19} aria-hidden="true" /> : <Play size={19} aria-hidden="true" />}
       </button>
     </section>
+    <FeaturedServices />
+    </>
   );
 }
