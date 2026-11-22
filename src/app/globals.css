@@ -434,3 +434,47 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outlin
 @media(max-width:900px){.aayna-categories-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.aayna-categories{padding:64px 18px}.aayna-categories-grid{grid-template-columns:1fr;gap:14px}.aayna-categories-tile,.aayna-categories-tile--featured{grid-column:auto;min-height:220px}.aayna-categories-label{padding:20px}}
 @media(prefers-reduced-motion:reduce){.aayna-categories-tile img{transition:none}.aayna-categories-tile:hover img{transform:none}}
+
+
+/* AAYNA Browse Services — independent page design */
+.aayna-browse-page{background:var(--background);color:var(--foreground);min-height:75vh;padding:clamp(60px,7vw,105px) 24px 110px}
+.aayna-browse-container{max-width:1200px;margin:0 auto}
+.aayna-browse-header{max-width:850px;margin-bottom:40px}
+.aayna-browse-kicker{font-size:11px;letter-spacing:.17em;font-weight:800;color:var(--muted);margin:0 0 18px}
+.aayna-browse-header h1{font-size:clamp(38px,5.5vw,72px);line-height:1.06;letter-spacing:-.065em;font-weight:800;margin:0;max-width:800px}
+.aayna-browse-header>p:last-child{font-size:16px;color:var(--muted);line-height:1.7;margin:20px 0 0}
+.aayna-browse-toolbar{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr) minmax(180px,1fr);gap:12px;padding:16px;border:1px solid var(--border);border-radius:22px;background:var(--surface)}
+.aayna-browse-search,.aayna-browse-select{display:flex;align-items:center;min-width:0;height:52px;padding:0 16px;border:1px solid var(--border);border-radius:12px;background:var(--background);color:var(--foreground)}
+.aayna-browse-search{gap:12px}.aayna-browse-search svg{flex:none;color:var(--muted)}
+.aayna-browse-search input,.aayna-browse-select select{width:100%;min-width:0;background:transparent;border:0;outline:0;color:var(--foreground);font:inherit;font-size:14px}
+.aayna-browse-select select{cursor:pointer}.aayna-browse-select option{color:#111;background:#fff}
+.aayna-browse-search:focus-within,.aayna-browse-select:focus-within{outline:2px solid #FF5100;outline-offset:2px}
+.aayna-browse-results{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:30px 0 20px;color:var(--muted);font-size:13px}
+.aayna-browse-results button{display:inline-flex;align-items:center;gap:6px;color:var(--foreground);font-size:13px;font-weight:700;cursor:pointer}
+.aayna-browse-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.aayna-browse-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:20px}
+.aayna-browse-photo{position:relative;height:260px;overflow:hidden;background:var(--border)}
+.aayna-browse-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.aayna-browse-card:hover .aayna-browse-photo img{transform:scale(1.035)}
+.aayna-browse-photoFallback{display:grid;place-items:center;height:100%;font-weight:800;font-size:24px;letter-spacing:.2em;color:var(--muted)}
+.aayna-browse-photoCategory{position:absolute;top:16px;left:16px;max-width:calc(100% - 32px);padding:8px 12px;border-radius:999px;background:#fff;color:#111;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aayna-browse-cardContent{padding:23px;display:flex;flex-direction:column;flex:1}
+.aayna-browse-titleRow{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.aayna-browse-titleRow h2{font-size:20px;line-height:1.25;font-weight:800;letter-spacing:-.035em;margin:0}
+.aayna-browse-titleRow strong{font-size:15px;white-space:nowrap}
+.aayna-browse-summary{font-size:13px;line-height:1.65;color:var(--muted);margin:13px 0 18px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.aayna-browse-duration{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);margin-top:auto;margin-bottom:18px}
+.aayna-browse-details{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;padding:0 18px;border:1px solid var(--foreground);border-radius:999px;color:var(--foreground);font-weight:800;font-size:13px;text-decoration:none;transition:background .2s,color .2s}
+.aayna-browse-details:hover{background:var(--foreground);color:var(--background)}
+.aayna-browse-details:focus-visible,.aayna-browse-pagination button:focus-visible,.aayna-browse-results button:focus-visible{outline:3px solid #FF5100;outline-offset:3px}
+.aayna-browse-skeleton{height:450px;border:1px solid var(--border);border-radius:20px;background:var(--surface);animation:aayna-featured-pulse 1.4s ease-in-out infinite alternate}
+.aayna-browse-notice,.aayna-browse-empty{border:1px solid var(--border);border-radius:20px;padding:45px 24px;text-align:center;margin:24px 0;color:var(--muted)}
+.aayna-browse-empty h2{font-size:25px;color:var(--foreground);font-weight:800;margin:0 0 8px}
+.aayna-browse-empty p{margin:0 0 16px}
+.aayna-browse-empty button,.aayna-browse-notice button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--foreground);color:var(--foreground);border-radius:999px;padding:10px 18px;cursor:pointer;margin-top:10px}
+.aayna-browse-pagination{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:38px;font-size:13px}
+.aayna-browse-pagination button{border:1px solid var(--border);border-radius:999px;padding:12px 18px;cursor:pointer}
+.aayna-browse-pagination button:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:950px){.aayna-browse-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.aayna-browse-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.aayna-browse-search{grid-column:span 2}}
+@media(max-width:620px){.aayna-browse-page{padding:60px 18px 80px}.aayna-browse-toolbar{grid-template-columns:1fr;padding:12px}.aayna-browse-search{grid-column:auto}.aayna-browse-grid{grid-template-columns:1fr;gap:18px}.aayna-browse-photo{height:250px}.aayna-browse-titleRow{flex-wrap:wrap}.aayna-browse-results{margin-top:24px}}
+@media(prefers-reduced-motion:reduce){.aayna-browse-photo img{transition:none}.aayna-browse-card:hover .aayna-browse-photo img{transform:none}.aayna-browse-skeleton{animation:none}}
