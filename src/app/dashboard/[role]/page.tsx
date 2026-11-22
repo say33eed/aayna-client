@@ -1,38 +1,59 @@
 import { cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
-import Link from "next/link";
 import { API_BASE_URL } from "@/lib/api";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 
 export const dynamic = "force-dynamic";
-type Session = { user?: { name?: string; role?: string; isBlocked?: boolean } } | null;
-export default async function Dashboard({ params }: { params: Promise<{ role: string }> }) {
+type Session = { user?: { name?: string; email?: string; role?: string; isBlocked?: boolean } } | null;
+export default async function Dashboard({ params, searchParams }: { params: Promise<{ role: string }>; searchParams: Promise<{ view?: string }> }) {
   const { role } = await params;
+  const { view } = await searchParams;
+  const activeView = view === "appointments" && role === "customer" ? "appointments" : "overview";
   if (role !== "customer" && role !== "admin") notFound();
-  const cookieHeader = (await cookies()).toString();
-  let session: Session = null;
+  let session: Session;
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/get-session`, {
-      headers: { cookie: cookieHeader }, cache: "no-store",
+      headers: { cookie: (await cookies()).toString() }, cache: "no-store",
     });
-    if (!response.ok) throw new Error("Authentication unavailable");
+    if (!response.ok) throw new Error("Session verification unavailable");
     session = (await response.json()) as Session;
   } catch {
-    return <main className="mx-auto max-w-2xl py-20"><h1 className="text-2xl font-bold">Unable to verify your session</h1><p className="mt-4 text-[var(--muted)]">Check that the AAYNA API is running and try again.</p></main>;
+    return <main className="mx-auto max-w-2xl p-10"><h1 className="text-2xl font-semibold">Unable to verify your session</h1><p className="mt-4">Please try again when the Aayna API is available.</p></main>;
   }
   if (!session?.user) redirect(`/sign-in?next=${encodeURIComponent(`/dashboard/${role}`)}`);
   if (session.user.isBlocked) redirect("/");
   const actualRole = session.user.role === "admin" ? "admin" : "customer";
   if (actualRole !== role) redirect(`/dashboard/${actualRole}`);
-  return (
-    <section className="mx-auto max-w-5xl py-12 sm:py-20">
-      <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#FF5100]">{role} workspace</p>
-      <h1 className="mt-4 text-4xl font-extrabold tracking-tight">Welcome, {session.user.name || "there"}.</h1>
-      <p className="mt-4 max-w-xl text-[var(--muted)]">Your secure dashboard is ready for the upcoming appointment and account-management modules.</p>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-[var(--border)] p-6"><h2 className="font-extrabold">{role === "admin" ? "Manage services" : "My appointments"}</h2><p className="mt-2 text-sm text-[var(--muted)]">This module is under development.</p></div>
-        <div className="rounded-2xl border border-[var(--border)] p-6"><h2 className="font-extrabold">My profile</h2><p className="mt-2 text-sm text-[var(--muted)]">Profile management is coming next.</p></div>
-      </div>
-      <Link href="/services" className="mt-8 inline-block text-sm font-bold text-[var(--foreground)] underline underline-offset-4">Browse Services</Link>
-    </section>
-  );
+  let summary: { total: number; pending: number; confirmed: number; cancelled: number } | null = null;
+  let summaryError = "";
+  if (actualRole === "customer") {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/appointments/my-summary`, {
+        headers: { cookie: (await cookies()).toString() }, cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Could not load appointment statistics.");
+      const result = await response.json() as { success?: boolean; data?: typeof summary };
+      if (!result.success || !result.data) throw new Error("Invalid appointment statistics.");
+      summary = result.data;
+    } catch {
+      summaryError = "Your appointment statistics are temporarily unavailable. Please refresh to try again.";
+    }
+  }
+  type Appointment = { id: string; serviceName: string; serviceCategory: string; serviceImage: string | null; appointmentDate: string; timeSlot: string; servicePrice: number; status: string; paymentStatus: string; createdAt: string; message: string };
+  let appointments: Appointment[] | null = null;
+  let appointmentsError = "";
+  if (actualRole === "customer" && activeView === "appointments") {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/appointments/mine`, {
+        headers: { cookie: (await cookies()).toString() }, cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Unable to load appointments");
+      const result = await response.json() as { success?: boolean; data?: Appointment[] };
+      if (!result.success || !Array.isArray(result.data)) throw new Error("Invalid appointment list");
+      appointments = result.data;
+    } catch {
+      appointmentsError = "Your appointments are temporarily unavailable. Please try again.";
+    }
+  }
+  return <DashboardShell role={actualRole} name={session.user.name || "Account"} email={session.user.email || ""} summary={summary} summaryError={summaryError} view={activeView} appointments={appointments} appointmentsError={appointmentsError} />;
 }

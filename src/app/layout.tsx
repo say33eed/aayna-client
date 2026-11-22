@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Nunito_Sans, Quicksand, Hind_Siliguri } from "next/font/google";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { ApiStatus } from "@/components/api-status";
+import { RouteFrame } from "@/components/route-frame";
 import "./globals.css";
+import "./dashboard-global.css";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-nunito" });
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"], display: "swap", variable: "--font-wordmark" });
@@ -19,14 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" data-theme="light" suppressHydrationWarning>
       <body className={`${nunitoSans.variable} ${quicksand.variable} ${hindSiliguri.variable}`}>
-        <div className="site-shell">
-          <Navbar />
-          <div className="site-container main-region">
-            <main className="main-content">{children}</main>
-          </div>
-          <Footer />
-        </div>
-      <ApiStatus />
+        <RouteFrame>{children}</RouteFrame>
       </body>
     </html>
   );

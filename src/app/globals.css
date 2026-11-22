@@ -526,3 +526,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outlin
 @media(max-width:900px){.aayna-booking-layout{grid-template-columns:minmax(0,1fr)}.aayna-booking-panel{max-width:650px;width:100%}}
 @media(max-width:600px){.aayna-booking-page{padding:30px 18px 76px}.aayna-booking-image{height:290px}.aayna-booking-panel{padding:22px 18px}}
 @media(prefers-reduced-motion:reduce){.aayna-booking-primary{transition:none}}
+
+/* AAYNA DASHBOARD FEATURE 01 */
+body:has([data-aayna-dashboard]) .site-shell { max-width:none; padding:0; margin:0; }
+body:has([data-aayna-dashboard]) .site-header, body:has([data-aayna-dashboard]) .site-shell > footer { display:none; }
+body:has([data-aayna-dashboard]) .site-container { max-width:none; width:100%; padding:0; margin:0; }
+body:has([data-aayna-dashboard]) .main-content { display:block; }

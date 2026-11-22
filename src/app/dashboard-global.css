@@ -1,0 +1,79 @@
+/* Aayna dashboard styles: explicit global selectors to avoid CSS-module integration issues. */
+.aaynaDash_frame{--dash-black:#111;--dash-white:#fff;--dash-gray:#717171;display:grid;grid-template-columns:256px minmax(0,1fr);min-height:100dvh;width:100%;background:#fff;color:#111;font-family:var(--font-nunito),sans-serif}
+.aaynaDash_sidebar{background:#111;color:#fff;display:flex;flex-direction:column;min-height:100dvh;position:sticky;top:0;height:100dvh}
+.aaynaDash_sideHead{height:88px;padding:26px 28px;border-bottom:1px solid #303030;display:flex;align-items:center;justify-content:space-between}
+.aaynaDash_wordmark{font-family:var(--font-wordmark),sans-serif;font-weight:700;letter-spacing:-1.5px;font-size:28px}.aaynaDash_dot,.aaynaDash_period{color:#ff5100}
+.aaynaDash_sideSection{padding:38px 26px 18px}.aaynaDash_eyebrow{font-size:11px;letter-spacing:.2em;font-weight:800;color:#858585}.aaynaDash_sideTitle{font-size:17px;font-weight:700;letter-spacing:-.03em;margin:10px 0 0}
+.aaynaDash_navigation{display:grid;gap:6px;padding:10px 14px}.aaynaDash_navItem{display:flex;align-items:center;gap:14px;padding:14px;border-radius:10px;font-size:14px;font-weight:700}.aaynaDash_selected{background:#fff;color:#111}.aaynaDash_upcoming{color:#9a9a9a}.aaynaDash_soon{margin-left:auto;font-size:10px;font-weight:600;color:#777}
+.aaynaDash_sideBottom{margin-top:auto;padding:20px 14px;border-top:1px solid #303030}.aaynaDash_external{display:flex;align-items:center;gap:12px;padding:12px;font-size:13px;font-weight:700}.aaynaDash_external svg:last-child{margin-left:auto}.aaynaDash_external:hover{color:#ff8b58}.aaynaDash_identity{border-top:1px solid #303030;display:flex;gap:12px;align-items:center;margin-top:16px;padding:20px 10px 0;min-width:0}.aaynaDash_avatar{background:#fff;color:#111;border-radius:50%;width:37px;height:37px;display:grid;place-items:center;font-weight:800;flex-shrink:0}.aaynaDash_identityText{display:grid;min-width:0;gap:2px}.aaynaDash_identityText strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aaynaDash_identityText small{color:#aaa;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aaynaDash_content{min-width:0}.aaynaDash_topbar{height:88px;border-bottom:1px solid #eaeaea;padding:0 clamp(24px,4vw,64px);display:flex;align-items:center;justify-content:space-between;gap:12px}.aaynaDash_topLabel{font-size:12px;font-weight:800;letter-spacing:.12em}.aaynaDash_topLabel span{color:#aaa;margin:0 8px}.aaynaDash_signOut{border:1px solid #dedede;background:#fff;border-radius:999px;display:flex;align-items:center;gap:9px;padding:10px 16px;font-size:12px;font-weight:800}.aaynaDash_signOut:hover{background:#f5f5f5}.aaynaDash_signOut:disabled{opacity:.6;cursor:wait}
+.aaynaDash_main{padding:clamp(32px,5vw,76px) clamp(24px,5vw,76px);max-width:1150px;margin:auto}.aaynaDash_heading h1{font-size:clamp(34px,4vw,60px);font-weight:750;line-height:1.12;letter-spacing:-.06em;margin:15px 0 12px}.aaynaDash_heading>p:last-child{font-size:16px;color:#777;line-height:1.6}.aaynaDash_intro{margin-top:56px;border:1px solid #e6e6e6;border-radius:20px;display:grid;grid-template-columns:60px 1fr;gap:24px;padding:clamp(24px,4vw,48px);background:linear-gradient(125deg,#fff 50%,#f7f7f7)}.aaynaDash_introIcon{height:56px;width:56px;background:#111;color:#fff;display:grid;place-items:center;border-radius:16px}.aaynaDash_intro h2{font-size:clamp(22px,2.5vw,30px);letter-spacing:-.04em;font-weight:800;margin:0 0 12px}.aaynaDash_intro p{max-width:570px;color:#6b6b6b;font-size:14px;line-height:1.8;margin:0 0 24px}.aaynaDash_primary{display:inline-flex;align-items:center;gap:10px;background:#111;color:#fff;border-radius:999px;padding:13px 19px;font-size:13px;font-weight:800}.aaynaDash_primary:hover{background:#333}.aaynaDash_error{color:#b42318;margin-top:20px}.aaynaDash_menuButton,.aaynaDash_close,.aaynaDash_scrim{display:none}
+@media(max-width:1050px){.aaynaDash_frame{grid-template-columns:215px minmax(0,1fr)}.aaynaDash_sideHead{padding:24px 20px}.aaynaDash_sideSection{padding-left:20px}.aaynaDash_main{padding:48px 34px}.aaynaDash_topbar{padding:0 34px}}
+@media(max-width:760px){.aaynaDash_frame{display:block}.aaynaDash_sidebar{position:fixed;z-index:101;top:0;bottom:0;left:0;width:min(300px,85vw);transform:translateX(-100%);transition:transform .2s ease}.aaynaDash_sidebarOpen{transform:translateX(0)}.aaynaDash_close,.aaynaDash_menuButton{display:grid;place-items:center;border:0;background:transparent;color:inherit;padding:8px}.aaynaDash_scrim{display:block;position:fixed;inset:0;background:#0008;border:0;z-index:100}.aaynaDash_topbar{height:72px;padding:0 20px;justify-content:flex-start}.aaynaDash_topLabel{font-size:10px;letter-spacing:.08em}.aaynaDash_signOut{margin-left:auto;padding:10px}.aaynaDash_signOut span{display:none}.aaynaDash_main{padding:38px 20px}.aaynaDash_intro{margin-top:36px;grid-template-columns:1fr;gap:20px;border-radius:16px;padding:24px}.aaynaDash_introIcon{width:48px;height:48px}.aaynaDash_heading h1{font-size:clamp(34px,8vw,48px)}}
+@media(prefers-reduced-motion:reduce){.aaynaDash_sidebar{transition:none}}
+
+
+/* Shared Aayna theme: use the same localStorage key and event as the public navbar. */
+.aaynaDash_themeToggle{display:grid;place-items:center;flex-shrink:0;width:42px;height:42px;border:1px solid var(--dash-border,#e5e5e5);border-radius:50%;background:var(--dash-surface,#fff);color:var(--dash-text,#111);cursor:pointer;margin-left:auto}
+.aaynaDash_themeToggle:hover{background:var(--dash-hover,#f3f3f3)}
+.aaynaDash_themeToggle:focus-visible,.aaynaDash_signOut:focus-visible,.aaynaDash_menuButton:focus-visible{outline:2px solid #ff5100;outline-offset:3px}
+.aaynaDash_topbar{justify-content:flex-start}.aaynaDash_signOut{margin-left:0}
+:root[data-theme="dark"] .aaynaDash_frame{--dash-text:#f6f6f6;--dash-surface:#171717;--dash-border:#343434;--dash-hover:#292929;background:#0b0b0b;color:#f6f6f6}
+:root[data-theme="dark"] .aaynaDash_sidebar{background:#050505}
+:root[data-theme="dark"] .aaynaDash_sideHead,:root[data-theme="dark"] .aaynaDash_sideBottom{border-color:#292929}
+:root[data-theme="dark"] .aaynaDash_selected{background:#f5f5f5;color:#111}
+:root[data-theme="dark"] .aaynaDash_topbar{border-color:#292929}
+:root[data-theme="dark"] .aaynaDash_signOut{background:#171717;border-color:#343434;color:#f6f6f6}
+:root[data-theme="dark"] .aaynaDash_signOut:hover{background:#292929}
+:root[data-theme="dark"] .aaynaDash_intro{background:linear-gradient(125deg,#151515 50%,#1b1b1b);border-color:#343434}
+:root[data-theme="dark"] .aaynaDash_introIcon{background:#f5f5f5;color:#111}
+:root[data-theme="dark"] .aaynaDash_intro p,:root[data-theme="dark"] .aaynaDash_heading>p:last-child{color:#aaa}
+:root[data-theme="dark"] .aaynaDash_primary{background:#f5f5f5;color:#111}
+:root[data-theme="dark"] .aaynaDash_primary:hover{background:#ddd}
+@media(max-width:760px){.aaynaDash_themeToggle{width:38px;height:38px}.aaynaDash_topbar{gap:8px}.aaynaDash_topLabel{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+
+/* Feature 02: customer overview, built on Aayna's existing dashboard tokens. */
+.aaynaDash_overview{margin-top:48px}
+.aaynaDash_overviewHead{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:24px}
+.aaynaDash_overviewHead h2{font-size:clamp(22px,2.6vw,32px);font-weight:800;letter-spacing:-.05em;margin:9px 0 5px}
+.aaynaDash_overviewHead p:last-child{font-size:14px;color:#777}
+.aaynaDash_stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.aaynaDash_stat{min-width:0;min-height:155px;padding:24px;border:1px solid #e5e5e5;border-radius:18px;background:#fff;display:flex;flex-direction:column;justify-content:space-between}
+.aaynaDash_statTop{display:flex;justify-content:space-between;align-items:start;gap:8px;color:#777;font-size:12px;font-weight:800;letter-spacing:.03em}
+.aaynaDash_statTop svg{flex-shrink:0;color:#111}
+.aaynaDash_stat strong{font-size:clamp(32px,3vw,44px);font-weight:800;line-height:1;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.aaynaDash_statsError{border:1px solid #dedede;border-radius:16px;padding:28px;font-size:14px;color:#666}
+.aaynaDash_statsError button{margin-left:10px;text-decoration:underline;font-weight:800;color:inherit}
+:root[data-theme="dark"] .aaynaDash_stat{background:#171717;border-color:#343434}
+:root[data-theme="dark"] .aaynaDash_statTop svg{color:#f6f6f6}
+:root[data-theme="dark"] .aaynaDash_overviewHead p:last-child,:root[data-theme="dark"] .aaynaDash_statTop{color:#aaa}
+:root[data-theme="dark"] .aaynaDash_statsError{border-color:#343434;color:#aaa}
+@media(max-width:1200px){.aaynaDash_stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.aaynaDash_overview{margin-top:36px}.aaynaDash_overviewHead{align-items:start;flex-direction:column}.aaynaDash_stats{gap:10px}.aaynaDash_stat{min-height:130px;padding:17px;border-radius:14px}.aaynaDash_statTop{font-size:11px}.aaynaDash_stat strong{font-size:34px}}
+@media(max-width:350px){.aaynaDash_stats{grid-template-columns:1fr}.aaynaDash_stat{min-height:105px}}
+
+/* Feature 03A: customer appointment history */
+.aaynaDash_navLink{display:flex;align-items:center;gap:14px;width:100%}
+.aaynaDash_history{margin-top:34px}.aaynaDash_historyHeader{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
+.aaynaDash_filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 18px}.aaynaDash_filters button{flex-shrink:0;border:1px solid #dedede;padding:9px 17px;border-radius:99px;font-size:13px;font-weight:700}.aaynaDash_filters button[aria-pressed="true"]{background:#111;color:white;border-color:#111}
+.aaynaDash_historyList{display:grid;gap:14px}.aaynaDash_historyCard{border:1px solid #e5e5e5;border-radius:18px;padding:24px;min-width:0;background:#fff}.aaynaDash_historyTop{display:flex;align-items:center;gap:15px;min-width:0}.aaynaDash_historyThumb{width:54px;height:54px;display:grid;place-items:center;background:#f3f3f3;border-radius:13px;flex-shrink:0}.aaynaDash_historyName{flex:1;min-width:0}.aaynaDash_historyName h2{font-size:17px;font-weight:800;overflow-wrap:anywhere}.aaynaDash_historyName p{font-size:12px;color:#777;margin-top:3px}.aaynaDash_status{text-transform:capitalize;font-size:11px;font-weight:800;border-radius:99px;background:#f1f1f1;padding:7px 11px}.aaynaDash_status[data-status="confirmed"]{background:#e8f5ee;color:#166534}.aaynaDash_status[data-status="cancelled"]{background:#f8eeee;color:#a21d1d}.aaynaDash_historyMeta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;border-top:1px solid #eee;margin-top:20px;padding-top:20px}.aaynaDash_historyMeta dt{font-size:11px;color:#777;margin-bottom:6px}.aaynaDash_historyMeta dd{font-size:13px;font-weight:800;overflow-wrap:anywhere;text-transform:capitalize}.aaynaDash_detailsButton{display:flex;align-items:center;gap:8px;margin-top:20px;font-size:13px;font-weight:800;text-decoration:underline;text-underline-offset:4px}.aaynaDash_details{border-top:1px solid #eee;margin-top:18px;padding-top:16px;display:grid;gap:8px;font-size:13px;overflow-wrap:anywhere}.aaynaDash_details strong{margin-right:10px}.aaynaDash_historyEmpty{border:1px solid #e5e5e5;border-radius:18px;padding:40px 24px;text-align:center;color:#777}.aaynaDash_historyEmpty a{text-decoration:underline;color:inherit}
+:root[data-theme="dark"] .aaynaDash_historyCard{background:#171717;border-color:#343434}:root[data-theme="dark"] .aaynaDash_historyThumb,:root[data-theme="dark"] .aaynaDash_status{background:#292929;color:#eee}:root[data-theme="dark"] .aaynaDash_historyMeta,:root[data-theme="dark"] .aaynaDash_details{border-color:#343434}:root[data-theme="dark"] .aaynaDash_filters button{border-color:#444}:root[data-theme="dark"] .aaynaDash_filters button[aria-pressed="true"]{background:#eee;color:#111}:root[data-theme="dark"] .aaynaDash_historyEmpty{border-color:#343434}
+@media(max-width:1050px){.aaynaDash_historyMeta{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:600px){.aaynaDash_historyCard{padding:17px;border-radius:14px}.aaynaDash_historyTop{gap:10px;flex-wrap:wrap}.aaynaDash_historyThumb{width:44px;height:44px}.aaynaDash_historyName h2{font-size:15px}.aaynaDash_historyMeta{grid-template-columns:repeat(2,minmax(0,1fr))}.aaynaDash_historyHeader{align-items:start;flex-direction:column}.aaynaDash_status{margin-left:auto}}
+
+/* Customer appointment cancellation — monochrome, responsive and theme aware */
+.aaynaDash_cancelButton{border:1px solid currentColor;border-radius:10px;padding:10px 14px;font-weight:700;justify-self:start;margin-top:8px;font-size:13px}
+.aaynaDash_cancelButton:hover{background:#f3f3f3}
+.aaynaDash_cancelNotice{margin-top:18px;font-size:13px;font-weight:600}
+.aaynaDash_dialogBackdrop{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.58);display:grid;place-items:center;padding:18px}
+.aaynaDash_dialog{background:#fff;color:#111;border-radius:20px;padding:28px;width:min(100%,440px);box-shadow:0 24px 80px #0003}
+.aaynaDash_dialog h2{font-size:21px;font-weight:800;line-height:1.3}
+.aaynaDash_dialog p{font-size:14px;line-height:1.6;margin-top:12px}
+.aaynaDash_dialogActions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:10px;margin-top:24px}
+.aaynaDash_dialogActions button{border:1px solid #ccc;border-radius:10px;padding:11px 15px;font-size:13px;font-weight:700}
+.aaynaDash_dialogActions button:last-child{background:#111;color:#fff;border-color:#111}
+.aaynaDash_dialogActions button:disabled{opacity:.5;cursor:wait}
+:root[data-theme="dark"] .aaynaDash_dialog{background:#1c1c1c;color:#fff;border:1px solid #444}
+:root[data-theme="dark"] .aaynaDash_dialogActions button{border-color:#555}
+:root[data-theme="dark"] .aaynaDash_dialogActions button:last-child{background:#fff;color:#111;border-color:#fff}
+:root[data-theme="dark"] .aaynaDash_cancelButton:hover{background:#303030}
+@media(max-width:480px){.aaynaDash_dialog{padding:22px}.aaynaDash_dialogActions{flex-direction:column}.aaynaDash_dialogActions button{width:100%}}
