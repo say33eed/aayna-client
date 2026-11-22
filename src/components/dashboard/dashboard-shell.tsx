@@ -68,8 +68,8 @@ export function DashboardShell({ adminOverview = null, adminError = "", role, na
   const [menuOpen, setMenuOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [appointmentRows, setAppointmentRows] = useState<Appointment[] | null>(appointments);
-  useEffect(() => { setAppointmentRows(appointments); }, [appointments]);
+  const [cancelledIds, setCancelledIds] = useState<string[]>([]);
+  const appointmentRows = appointments?.map((row) => cancelledIds.includes(row.id) ? { ...row, status: "cancelled" } : row) ?? null;
   const [payingId, setPayingId] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState("");
   const [cancelId, setCancelId] = useState<string | null>(null);
@@ -119,7 +119,7 @@ export function DashboardShell({ adminOverview = null, adminError = "", role, na
       });
       const result = await response.json().catch(() => null) as { success?: boolean; message?: string } | null;
       if (!response.ok || !result?.success) throw new Error(result?.message || "Cancellation failed.");
-      setAppointmentRows((rows) => rows?.map((row) => row.id === cancelId ? { ...row, status: "cancelled" } : row) ?? null);
+      setCancelledIds((ids) => ids.includes(cancelId) ? ids : [...ids, cancelId]);
       setCancelId(null); setCancelMessage("Appointment cancelled successfully.");
       router.refresh();
     } catch (cause) {

@@ -8,13 +8,13 @@ import { formatAaynaPrice, formatDhakaDate } from "@/lib/locale";
 type Receipt = { reference: string; appointmentId: string; serviceName: string; appointmentDate: string; timeSlot: string; amount: number; currency: string; paidAt: string; paymentStatus: "paid" };
 export default function PaymentSuccessPage() {
   const [sessionId, setSessionId] = useState<string | null>(null);
-  useEffect(() => { setSessionId(new URLSearchParams(window.location.search).get("session_id") ?? ""); }, []);
+  useEffect(() => { const id = new URLSearchParams(window.location.search).get("session_id") ?? ""; queueMicrotask(() => setSessionId(id)); }, []);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [receiptOpen, setReceiptOpen] = useState(true);
   const [state, setState] = useState<"checking" | "waiting" | "error">("checking");
   useEffect(() => {
     if (sessionId === null) return;
-    if (!sessionId || !/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) { setState("error"); return; }
+    if (!sessionId || !/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) { queueMicrotask(() => setState("error")); return; }
     let cancelled = false;
     let tries = 0;
     const controller = new AbortController();

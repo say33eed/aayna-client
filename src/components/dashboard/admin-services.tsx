@@ -42,7 +42,7 @@ export function AdminServices() {
     try { setCategories(await request<string[]>("/categories")); }
     catch (e) { setError(e instanceof Error ? e.message : "Unable to load categories."); }
   }, []);
-  useEffect(() => { void load(); void loadCategories(); }, [load, loadCategories]);
+  useEffect(() => { const controller = new AbortController(); queueMicrotask(() => { if (!controller.signal.aborted) { void load(); void loadCategories(); } }); return () => controller.abort(); }, [load, loadCategories]);
   function openForm(service?: Service) { setCategoryMode("select"); setCustomCategory(""); void loadCategories(); setError(""); setNotice(""); setEditing(service?._id || "new"); setImageUrl(""); setForm(service ? { serviceName: service.serviceName, category: service.category, description: service.description, price: service.price, duration: service.duration, image: service.image, images: service.images?.length ? service.images : (service.image ? [service.image] : []), status: service.status } : empty); }
   const gallery = form.images?.length ? form.images : (form.image ? [form.image] : []);
   function addImage(url: string) {

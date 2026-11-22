@@ -31,7 +31,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
   const [refreshSlots, setRefreshSlots] = useState(0);
 
   useEffect(() => {
-    if (!session?.user || user.isBlocked) return;
+    if (!user || user.isBlocked) return;
     let active = true;
     void loadServices(true).then((entry) => {
       if (!active) return;
