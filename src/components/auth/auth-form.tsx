@@ -24,11 +24,20 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   const passwordValid = password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);
 
+  function destination(role: "admin" | "customer") {
+    const requested = new URLSearchParams(window.location.search).get("next");
+    if (requested && requested.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\") && !requested.includes(":") && !requested.includes("%")) {
+      if (requested.startsWith("/services/") && role === "customer") return requested;
+      if (requested === `/dashboard/${role}` || requested === "/dashboard") return requested;
+    }
+    return `/dashboard/${role}`;
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
     setError(""); setSuccess("");
-    if (register && (!passwordValid || password !== confirm)) {
+    if (register && (!name.trim() || !passwordValid || password !== confirm)) {
       setError("Use 6+ characters with uppercase and lowercase letters, and matching passwords.");
       return;
     }
@@ -43,9 +52,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       }
       setSuccess(register ? "Account created successfully." : "Signed in successfully.");
       const role = result.data?.user && "role" in result.data.user && result.data.user.role === "admin" ? "admin" : "customer";
-      const requested = new URLSearchParams(window.location.search).get("next");
-      const safeNext = requested && /^\/services\/[a-f0-9]{24}$/i.test(requested) && role === "customer" ? requested : null;
-      router.replace(safeNext ?? `/dashboard/${role}`);
+      router.replace(destination(role));
       router.refresh();
     } catch {
       setError("Could not reach the authentication service. Please try again.");
@@ -56,7 +63,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
     if (busy) return;
     setError(""); setBusy(true);
     try {
-      const result = await authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" });
+      // Gateway rechecks the server session and redirects by the authoritative role.
+      const next = new URLSearchParams(window.location.search).get("next");
+      // Better Auth runs on port 5000; use an absolute frontend URL so
+      // the OAuth callback cannot resolve /dashboard against the API origin.
+      const frontendOrigin = window.location.origin;
+      const callbackPath = next && /^\/services\/[a-f0-9]{24}$/i.test(next)
+        ? `/dashboard?next=${encodeURIComponent(next)}`
+        : "/dashboard";
+      const callbackURL = `${frontendOrigin}${callbackPath}`;
+      const result = await authClient.signIn.social({ provider: "google", callbackURL });
       if (result.error) setError(result.error.message || "Google sign-in is unavailable.");
     } catch {
       setError("Google sign-in is unavailable. Check OAuth configuration.");
@@ -66,12 +82,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const inputClass = "h-12 w-full rounded-xl border-2 border-[var(--border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--muted)] focus:border-[#FF5100] focus-visible:ring-[3px] focus-visible:ring-[#FF5100]/20";
   return (
     <section className="mx-auto w-full max-w-[440px] py-10 sm:py-16">
-      <div className="mb-9">
+      <div className="mb-9 text-center">
+        <p className="mb-4 text-xl font-extrabold tracking-[-0.08em]">aayna<span className="text-[#FF5100]">.</span></p>
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#FF5100]">{register ? "Join AAYNA" : "Welcome back"}</p>
         <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">{register ? "Create your account" : "Sign in to AAYNA"}</h1>
         <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{register ? "Discover services and manage appointments in one place." : "Your services and appointments, all in one place."}</p>
       </div>
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-7">
+      <div className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.035)] sm:p-8">
         <button type="button" onClick={googleSignIn} disabled={busy} className="mb-6 flex h-12 w-full items-center justify-center gap-3 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--foreground)] transition-colors hover:border-[#FF5100] focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-[#FF5100] disabled:opacity-50">
           <span aria-hidden="true" className="font-bold text-[#FF5100]">G</span> Continue with Google
         </button>
