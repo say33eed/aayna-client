@@ -1,18 +1,86 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight, Pause, Play } from "lucide-react";
+
+
+const HEADLINES = [
+  "Make time for what makes you feel good.",
+  "A little care can change your day.",
+  "Your style. Your moment. Your choice.",
+  "Find the care that feels right for you.",
+] as const;
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => {
+      setReducedMotion(query.matches);
+      if (query.matches) {
+        setPlaying(false);
+        videoRef.current?.pause();
+      }
+    };
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!playing || reducedMotion) return;
+    const interval = window.setInterval(() => setActive((value) => (value + 1) % HEADLINES.length), 3000);
+    return () => window.clearInterval(interval);
+  }, [playing, reducedMotion]);
+
+  const toggleMotion = () => {
+    if (playing) {
+      videoRef.current?.pause();
+      setPlaying(false);
+    } else {
+      void videoRef.current?.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
+
   return (
-    <section className="hero">
-      <p className="eyebrow">GROOMING &amp; SELF-CARE · DHAKA</p>
-      <h1>Looking good,<br />simplified.</h1>
-      <p className="hero-description">Discover and book salon &amp; grooming services in your location.</p>
-      <div className="hero-actions">
-        <Button asChild><Link href="/services">Explore services <ArrowUpRight size={17} /></Link></Button>
-        <Button asChild variant="outline"><Link href="/how-it-works">How it works</Link></Button>
+    <section className="aayna-motion" aria-label="Discover salon services">
+      <video
+        ref={videoRef}
+        className={"aayna-video"}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="none"
+        poster="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=80"
+        aria-hidden="true"
+      >
+        <source src="/videos/aayna-hero.mp4" type="video/mp4" />
+      </video>
+      <div className={"aayna-shade"} aria-hidden="true" />
+      <div className={"aayna-content"}>
+        <h1 className={"aayna-headline"} key={active}>{HEADLINES[active]}</h1>
+        <p className={"aayna-description"}>
+          Discover salon services, explore your options, and book your next appointment with confidence.
+        </p>
+        <Link className={"aayna-cta"} href="/services">
+          Explore Salon Services <ArrowUpRight size={19} strokeWidth={2} aria-hidden="true" />
+        </Link>
       </div>
-      <p className="support-note">Starting in Dhaka, Bangladesh.</p>
+      <button
+        className="aayna-motionButton"
+        type="button"
+        onClick={toggleMotion}
+        aria-label={playing ? "Pause background motion and headline rotation" : "Play background motion and headline rotation"}
+      >
+        {playing ? <Pause size={19} aria-hidden="true" /> : <Play size={19} aria-hidden="true" />}
+      </button>
     </section>
   );
 }
