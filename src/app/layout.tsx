@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <body className={`${nunitoSans.variable} ${quicksand.variable} ${hindSiliguri.variable}`}><div className="site-shell"><Navbar /><div className="site-container main-region"><ApiStatus /><main className="main-content">{children}</main></div><Footer /></div><OperationFeedback /></body>
     </html>
   );

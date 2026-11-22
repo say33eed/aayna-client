@@ -25,8 +25,8 @@ const THEME_KEY = "aayna-theme";
 const THEME_EVENT = "aayna-theme-change";
 
 function readTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  return window.localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark";
+  if (typeof window === "undefined") return "light";
+  return window.localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light";
 }
 
 function subscribeToTheme(callback: () => void) {
@@ -49,7 +49,7 @@ function Identity({ image, initials }: { image?: string | null; initials: string
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const theme = useSyncExternalStore(subscribeToTheme, readTheme, () => "dark" as Theme);
+  const theme = useSyncExternalStore(subscribeToTheme, readTheme, () => "light" as Theme);
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
   const blocked = Boolean(user && "isBlocked" in user && user.isBlocked === true);

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root, :root[data-theme="dark"] {
+:root[data-theme="dark"] {
   color-scheme: dark;
   --background: #090909;
   --foreground: #ffffff;
@@ -10,7 +10,7 @@
   --primary-bg: #FF5100;
   --primary-text: #090909;
 }
-:root[data-theme="light"] {
+:root, :root[data-theme="light"] {
   color-scheme: light;
   --background: #ffffff;
   --foreground: #111111;
@@ -141,8 +141,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outlin
 @media (max-width: 400px) { .market-label { display: none; } }
 
 /* Feature 01: sticky, subtly translucent navigation in both themes. */
-:root, :root[data-theme="dark"] { --navbar-glass: rgb(9 9 9 / 88%); }
-:root[data-theme="light"] { --navbar-glass: rgb(255 255 255 / 88%); }
+:root[data-theme="dark"] { --navbar-glass: rgb(9 9 9 / 88%); }
+:root, :root[data-theme="light"] { --navbar-glass: rgb(255 255 255 / 88%); }
 .site-header {
   position: sticky;
   top: 0;
@@ -199,11 +199,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outlin
 }
 
 /* AAYNA canonical interaction tokens — dark and light themes. */
-:root, :root[data-theme="dark"] {
+:root[data-theme="dark"] {
   --accent-button-text: #090909;
   --accent-button-hover: #ffffff;
 }
-:root[data-theme="light"] {
+:root, :root[data-theme="light"] {
   --accent-button-text: #ffffff;
   --accent-button-hover: #090909;
 }
