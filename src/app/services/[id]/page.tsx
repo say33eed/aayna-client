@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, CalendarDays, Clock3, ShieldCheck } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { loadServices, type Service } from "@/lib/public-services";
+import { notify } from "@/lib/notifications";
 
 const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 type Slot = { time: string; available: boolean };
@@ -53,7 +54,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
         if (!response.ok || !body.success || !Array.isArray(body.data)) throw new Error(body.message || "Time slots are unavailable.");
         return body.data as Slot[];
       }).then((data) => { if (!controller.signal.aborted) { setSlots(data); setSlotsState("ready"); } })
-      .catch(() => { if (!controller.signal.aborted) setSlotsState("error"); });
+      .catch(() => { if (!controller.signal.aborted) { setSlotsState("error"); notify.error("Could not check availability", { description: "Please try another date or retry shortly." }); } });
     return () => { window.clearTimeout(start); controller.abort(); };
   }, [id, date, service, refreshSlots]);
 
@@ -69,10 +70,13 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
       const body = await response.json();
       if (!response.ok || !body.success) throw new Error(body.message || "Unable to submit your appointment.");
       setSubmitState("success");
+      notify.success("Appointment requested", { description: "Your request is pending review. No payment is due yet." });
       setNotice("Your appointment request was received. Status: Pending · Payment: Unpaid.");
     } catch (reason) {
       setSubmitState("idle");
-      setNotice(reason instanceof Error ? reason.message : "Unable to submit your appointment.");
+      const detail = reason instanceof Error ? reason.message : "Unable to submit your appointment.";
+      setNotice(detail);
+      notify.error("Appointment request failed", { description: detail });
       // Refresh availability after a conflict or network error.
       setRefreshSlots((previous) => previous + 1);
     }

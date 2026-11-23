@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Clock3, Search, RotateCw, X } from "lucide-react";
 import { loadServices, type Service } from "@/lib/public-services";
+import { notify } from "@/lib/notifications";
 
 const PAGE_SIZE = 9;
 const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -65,7 +66,7 @@ export function ServiceCatalog() {
     return () => window.clearTimeout(timeout);
   }, [query, search, update]);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (showErrorToast = false) => {
     setState("loading"); setError("");
     try {
       const result = await loadServices(true);
@@ -73,8 +74,10 @@ export function ServiceCatalog() {
       setState("ready");
     } catch (e) {
       setRows([]);
-      setError(e instanceof Error ? e.message : "Unable to load services.");
+      const detail = e instanceof Error ? e.message : "Unable to load services.";
+      setError(detail);
       setState("error");
+      if (showErrorToast) notify.error("Could not refresh services", { description: detail });
     }
   }, []);
   useEffect(() => {
@@ -102,7 +105,7 @@ export function ServiceCatalog() {
       <label className="aayna-browse-select"><span className="sr-only">Filter by category</span><select value={category} onChange={(e) => update({ category: e.target.value, page: null })}><option value="">All categories</option>{category && !categories.includes(category) && <option value={category}>{category}</option>}{categories.map((name) => <option key={name} value={name}>{name}</option>)}</select></label>
       <label className="aayna-browse-select"><span className="sr-only">Sort services by price</span><select value={sort} onChange={(e) => update({ sort: e.target.value, page: null })}><option value="default">Recommended order</option><option value="price_asc">Price: Low to High</option><option value="price_desc">Price: High to Low</option></select></label>
     </div>
-    {state === "error" && <div className="aayna-browse-notice" role="alert"><p>{error}</p><button type="button" onClick={() => void refresh()}><RotateCw size={16} /> Try again</button></div>}
+    {state === "error" && <div className="aayna-browse-notice" role="alert"><p>{error}</p><button type="button" onClick={() => void refresh(true)}><RotateCw size={16} /> Try again</button></div>}
     {state === "loading" && <div className="aayna-browse-grid" role="status" aria-label="Loading services">{Array.from({ length: 6 }, (_, i) => <div className="aayna-browse-skeleton" key={i} />)}</div>}
     {state === "ready" && <>
       <div className="aayna-browse-results"><span>{filtered.length === 0 ? "No matching services" : `Showing ${(currentPage - 1) * PAGE_SIZE + 1}–${Math.min(currentPage * PAGE_SIZE, filtered.length)} of ${filtered.length} services`}</span>{hasFilters && <button type="button" onClick={() => { setQuery(""); update({ search: null, category: null, sort: null, page: null }); }}><X size={15} /> Clear filters</button>}</div>

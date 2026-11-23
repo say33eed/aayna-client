@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { notify } from "@/lib/notifications";
 import { Button } from "@/components/ui/button";
 
 type Mode = "sign-in" | "sign-up";
@@ -48,7 +49,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
   function selectPhoto(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
     if (file && (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type) || file.size > 5 * 1024 * 1024)) {
-      setError("Choose a JPEG, PNG, WebP, or GIF image under 5 MB.");
+      showError("Choose a JPEG, PNG, WebP, or GIF image under 5 MB.");
       event.target.value = "";
       return;
     }
@@ -80,7 +81,6 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const passwordValid = password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);
 
@@ -93,16 +93,21 @@ export function AuthForm({ mode }: { mode: Mode }) {
     return `/dashboard/${role}`;
   }
 
+  function showError(message: string) {
+    setError(message);
+    notify.error(message, { id: "aayna-auth-error" });
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
-    setError(""); setSuccess("");
+    setError("");
     if (register && (!name.trim() || !passwordValid || password !== confirm)) {
-      setError("Use 6+ characters with uppercase and lowercase letters, and matching passwords.");
+      showError("Use 6+ characters with uppercase and lowercase letters, and matching passwords.");
       return;
     }
     if (register && !photo && image.trim() && photoStatus !== "valid") {
-      setError("Enter a direct HTTPS image URL that loads in the preview, or upload a photo.");
+      showError("Enter a direct HTTPS image URL that loads in the preview, or upload a photo.");
       return;
     }
     setBusy(true);
@@ -111,7 +116,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         ? await authClient.signUp.email({ name: name.trim(), email: email.trim(), password, image: image.trim() || undefined })
         : await authClient.signIn.email({ email: email.trim(), password });
       if (result.error) {
-        setError(result.error.message || "Authentication failed. Please try again.");
+        showError(result.error.message || "Authentication failed. Please try again.");
         return;
       }
       if (register && photo) {
@@ -120,16 +125,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
           const updated = await authClient.updateUser({ image: uploadedUrl });
           if (updated.error) throw new Error(updated.error.message || "Photo could not be saved.");
         } catch (uploadError) {
-          setError(`Account created, but the photo was not saved: ${uploadError instanceof Error ? uploadError.message : "Upload failed"}. You can sign in normally.`);
+          showError(`Account created, but the photo was not saved: ${uploadError instanceof Error ? uploadError.message : "Upload failed"}. You can sign in normally.`);
           return;
         }
       }
-      setSuccess(register ? "Account created successfully." : "Signed in successfully.");
+      notify.success(register ? "Account created successfully." : "Signed in successfully.", { id: "aayna-auth-success" });
       const role = result.data?.user && "role" in result.data.user && result.data.user.role === "admin" ? "admin" : "customer";
       router.replace(destination(role));
       router.refresh();
     } catch {
-      setError("Could not reach the authentication service. Please try again.");
+      showError("Could not reach the authentication service. Please try again.");
     } finally { setBusy(false); }
   }
 
@@ -147,9 +152,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
         : "/dashboard";
       const callbackURL = `${frontendOrigin}${callbackPath}`;
       const result = await authClient.signIn.social({ provider: "google", callbackURL });
-      if (result.error) setError(result.error.message || "Google sign-in is unavailable.");
+      if (result.error) showError(result.error.message || "Google sign-in is unavailable.");
     } catch {
-      setError("Google sign-in is unavailable. Check OAuth configuration.");
+      showError("Google sign-in is unavailable. Check OAuth configuration.");
     } finally { setBusy(false); }
   }
 
@@ -196,7 +201,6 @@ export function AuthForm({ mode }: { mode: Mode }) {
             <label className="flex flex-col gap-2 text-sm font-semibold">Confirm password<input className={inputClass} value={confirm} onChange={(e)=>setConfirm(e.target.value)} type="password" autoComplete="new-password" required placeholder="Repeat your password"/></label>
           </>}
           {error && <p role="alert" className="rounded-lg border border-red-500/40 p-3 text-sm text-red-500">{error}</p>}
-          {success && <p role="status" className="text-sm text-[var(--foreground)]">{success}</p>}
           <Button type="submit" disabled={busy} className="mt-2 h-12 w-full">{busy ? "Please wait…" : register ? "Create account" : "Sign in"} <ArrowRight size={17} aria-hidden="true"/></Button>
         </form>
         <p className="mt-6 text-center text-sm text-[var(--muted)]">{register ? "Already have an account?" : "New to AAYNA?"}{" "}<Link className="font-bold text-[var(--foreground)] underline underline-offset-4 hover:text-[#FF5100]" href={register ? "/sign-in" : "/sign-up"}>{register ? "Sign in" : "Create an account"}</Link></p>

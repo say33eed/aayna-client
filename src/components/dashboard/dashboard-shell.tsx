@@ -10,6 +10,7 @@ import { useState, useSyncExternalStore, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarDays, ChevronRight, CircleUserRound, LayoutGrid, LogOut, Menu, Moon, Scissors, Sun, UsersRound, ReceiptText, X } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { notify } from "@/lib/notifications";
 import { API_BASE_URL } from "@/lib/api";
 import { formatAaynaPrice, formatDhakaDate } from "@/lib/locale";
 const styles = {
@@ -109,7 +110,8 @@ export function DashboardShell({ adminOverview = null, adminError = "", role, na
       }
       window.location.assign(destination.toString());
     } catch (cause) {
-      setPaymentError(cause instanceof Error ? cause.message : "Unable to start checkout.");
+      const message = cause instanceof Error ? cause.message : "Unable to start checkout.";
+      setPaymentError(message); notify.error(message);
       setPayingId(null);
     }
   }
@@ -123,10 +125,11 @@ export function DashboardShell({ adminOverview = null, adminError = "", role, na
       const result = await response.json().catch(() => null) as { success?: boolean; message?: string } | null;
       if (!response.ok || !result?.success) throw new Error(result?.message || "Cancellation failed.");
       setCancelledIds((ids) => ids.includes(cancelId) ? ids : [...ids, cancelId]);
-      setCancelId(null); setCancelMessage("Appointment cancelled successfully.");
+      setCancelId(null); setCancelMessage(""); notify.success("Appointment cancelled successfully.");
       router.refresh();
     } catch (cause) {
-      setCancelMessage(cause instanceof Error ? cause.message : "Unable to cancel appointment.");
+      const message = cause instanceof Error ? cause.message : "Unable to cancel appointment.";
+      setCancelMessage(message); notify.error(message);
     } finally { setCancelling(false); }
   }
   async function signOut() {
@@ -134,8 +137,8 @@ export function DashboardShell({ adminOverview = null, adminError = "", role, na
     try {
       const result = await authClient.signOut();
       if (result.error) throw new Error(result.error.message || "Unable to sign out");
-      router.replace("/sign-in"); router.refresh();
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to sign out"); setSigningOut(false); }
+      notify.success("Signed out successfully."); router.replace("/sign-in"); router.refresh();
+    } catch (cause) { const message = cause instanceof Error ? cause.message : "Unable to sign out"; setError(message); notify.error(message); setSigningOut(false); }
   }
   return <div className={styles.frame} data-aayna-dashboard>
     <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ""}`} aria-label="Dashboard navigation">

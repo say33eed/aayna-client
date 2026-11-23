@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import Image from "next/image";
 import { Check, ImagePlus, LoaderCircle, RotateCcw, ShieldCheck, UserRound } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api";
+import { notify } from "@/lib/notifications";
 import "./my-profile.css";
 
 type Profile = { id: string; name: string; email: string; phone: string; image: string; role: "admin" | "customer"; emailVerified: boolean };
@@ -58,7 +59,7 @@ export function MyProfile() {
     if (!file) return;
     setError(""); setNotice("");
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 3 * 1024 * 1024) {
-      setError("Choose a JPEG, PNG or WebP image up to 3 MB."); return;
+      setError("Choose a JPEG, PNG or WebP image up to 3 MB."); notify.error("Choose a JPEG, PNG or WebP image up to 3 MB."); return;
     }
     setUploading(true);
     try {
@@ -71,8 +72,8 @@ export function MyProfile() {
       const response = await fetch(`${API_BASE_URL}/api/profile/image`, { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: base64, mime: file.type }) });
       const result = await response.json() as { success?: boolean; message?: string; data?: { url?: string } };
       if (!response.ok || !result.success || !result.data?.url) throw new Error(result.message || "Image upload failed.");
-      setImage(result.data.url); setNotice("Image uploaded. Save changes to update your profile.");
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Image upload failed."); }
+      setImage(result.data.url); setNotice(""); notify.success("Image uploaded. Save changes to update your profile.");
+    } catch (cause) { const message = cause instanceof Error ? cause.message : "Image upload failed."; setError(message); notify.error(message); }
     finally { setUploading(false); if (fileRef.current) fileRef.current.value = ""; }
   }
 
@@ -84,8 +85,8 @@ export function MyProfile() {
       const result = await response.json() as ApiResult;
       if (!response.ok || !result.success || !result.data) throw new Error(result.message || "Unable to save profile.");
       setProfile(result.data); setName(result.data.name); setPhone(result.data.phone); setImage(result.data.image);
-      setNotice("Profile saved successfully. Your updated name will appear throughout the dashboard after refreshing.");
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to save profile."); }
+      setNotice(""); notify.success("Profile saved successfully.");
+    } catch (cause) { const message = cause instanceof Error ? cause.message : "Unable to save profile."; setError(message); notify.error(message); }
     finally { setSaving(false); }
   }
 

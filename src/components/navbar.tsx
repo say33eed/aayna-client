@@ -19,6 +19,7 @@ import { BrandMark } from "./brand-mark";
 import { NavigationLink } from "./ui/navigation-link";
 import { Button } from "./ui/button";
 import { authClient } from "@/lib/auth-client";
+import { notify } from "@/lib/notifications";
 
 type Theme = "dark" | "light";
 
@@ -77,7 +78,6 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const [signOutError, setSignOutError] = useState("");
   const headerRef = useRef<HTMLElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
@@ -150,16 +150,16 @@ export function Navbar() {
   async function signOut() {
     if (signingOut) return;
     setSigningOut(true);
-    setSignOutError("");
     try {
       const result = await authClient.signOut();
       if (result.error) throw new Error(result.error.message || "Logout failed");
       setMobileOpen(false);
       setAccountOpen(false);
+      notify.success("Signed out successfully.", { id: "aayna-sign-out" });
       router.replace("/");
       router.refresh();
     } catch {
-      setSignOutError("Could not sign out. Please try again.");
+      notify.error("Could not sign out. Please try again.", { id: "aayna-sign-out-error" });
     } finally {
       setSigningOut(false);
     }
@@ -216,7 +216,7 @@ export function Navbar() {
 
           {!isPending && user && <div ref={accountRef} className="relative hidden xl:block">
             <button ref={accountTriggerRef} type="button" aria-expanded={accountOpen} aria-controls="aayna-account-popover" aria-haspopup="true"
-              onClick={() => { setSignOutError(""); setAccountOpen((open) => !open); }}
+              onClick={() => { setAccountOpen((open) => !open); }}
               className={`inline-flex h-11 max-w-52 items-center gap-2 rounded-full border-2 border-[var(--border)] bg-[var(--surface)] p-1 pr-3 text-[var(--foreground)] transition-colors hover:border-[#FF5100] ${focusRing}`}>
               <Identity image={user.image} initials={initials} />
               <span className="max-w-24 truncate text-sm font-bold">{givenName}</span>
@@ -238,7 +238,6 @@ export function Navbar() {
                 className={`mt-1 flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-bold text-[var(--foreground)] transition-colors hover:bg-[var(--surface)] disabled:opacity-50 ${focusRing}`}>
                 <LogOut size={18} className="text-[#FF5100]" aria-hidden="true" /> {signingOut ? "Signing out…" : "Logout"}
               </button>
-              {signOutError && <p role="alert" className="px-3 pt-2 text-xs text-red-500">{signOutError}</p>}
             </div>}
           </div>}
 
@@ -267,7 +266,6 @@ export function Navbar() {
             </div>
             {!blocked && <Link href={dashboardHref} onClick={closeMenus} className={`flex min-h-11 items-center gap-3 rounded-xl px-2 text-sm font-bold text-[var(--foreground)]! hover:bg-[var(--surface)] ${focusRing}`}><LayoutDashboard size={18} aria-hidden="true" /> Dashboard</Link>}
             <button type="button" onClick={signOut} disabled={signingOut} className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-2 text-left text-sm font-bold hover:bg-[var(--surface)] disabled:opacity-50 ${focusRing}`}><LogOut size={18} className="text-[#FF5100]" aria-hidden="true" />{signingOut ? "Signing out…" : "Logout"}</button>
-            {signOutError && <p role="alert" className="px-2 pt-2 text-xs text-red-500">{signOutError}</p>}
           </div>}
           {!isPending && !user && <div className="flex w-full flex-col gap-3 border-t border-[var(--border)] pt-4">
             <NavigationLink href="/sign-in" active={active("/sign-in")} onClick={closeMenus} className="min-h-11">Sign In</NavigationLink>

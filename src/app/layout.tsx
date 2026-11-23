@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito_Sans, Quicksand, Hind_Siliguri } from "next/font/google";
 import { RouteFrame } from "@/components/route-frame";
+import { AaynaToaster } from "@/components/aayna-toaster";
 import "./globals.css";
 import "./dashboard-global.css";
 import "../components/dashboard/admin-services.css";
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" data-theme="light" suppressHydrationWarning>
       <body className={`${nunitoSans.variable} ${quicksand.variable} ${hindSiliguri.variable}`}>
         <RouteFrame>{children}</RouteFrame>
+        <AaynaToaster />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Ban, Check, ChevronRight, RefreshCw, Search, ShieldCheck, UserRound, UsersRound, X } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api";
+import { notify } from "@/lib/notifications";
 import { formatDhakaDate } from "@/lib/locale";
 import "./admin-users.css";
 
@@ -64,8 +65,8 @@ export function AdminUsers() {
       const next = !confirm.isBlocked;
       await request<{ id: string; isBlocked: boolean }>(`/api/admin/users/${encodeURIComponent(confirm.id)}/block`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isBlocked: next }) });
       setSelected((previous) => previous?.id === confirm.id ? { ...previous, isBlocked: next } : previous);
-      setConfirm(null); reload();
-    } catch (cause) { setActionError(cause instanceof Error ? cause.message : "Could not update customer access."); }
+      setConfirm(null); notify.success(next ? "Customer access blocked." : "Customer access restored."); reload();
+    } catch (cause) { const message = cause instanceof Error ? cause.message : "Could not update customer access."; setActionError(message); notify.error(message); }
     finally { setSaving(false); }
   }
 

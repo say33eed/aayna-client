@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ImagePlus, Pencil, Plus, Search, Scissors, Trash2, X } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api";
+import { notify } from "@/lib/notifications";
 import { formatAaynaPrice } from "@/lib/locale";
 
 type Service = { _id: string; serviceName: string; category: string; description: string; price: number; duration: number; image: string; images?: string[]; status: "active" | "inactive" };
@@ -70,7 +71,7 @@ export function AdminServices() {
         const result = await request<{ url: string }>("/image", { method: "POST", body: JSON.stringify({ image: base64, mime: file.type }) });
         addImage(result.url);
       }
-    } catch (e) { setError(e instanceof Error ? e.message : "Image upload failed. Images already uploaded remain in the gallery."); }
+    } catch (e) { const message = e instanceof Error ? e.message : "Image upload failed. Images already uploaded remain in the gallery."; setError(message); notify.error(message); }
     finally { setUploading(false); }
   }
   function addUrl() {
@@ -96,21 +97,21 @@ export function AdminServices() {
         setCategories((previous) => [...new Set([...previous, result.name])]);
       }
       await request(editing === "new" ? "/" : `/${editing}`, { method: editing === "new" ? "POST" : "PATCH", body: JSON.stringify(nextForm) });
-      setEditing(null); setNotice(editing === "new" ? "Service created successfully." : "Service updated successfully."); await load();
-    } catch (e) { setError(e instanceof Error ? e.message : "Could not save service."); }
+      setEditing(null); const message = editing === "new" ? "Service created successfully." : "Service updated successfully."; setNotice(""); notify.success(message); await load();
+    } catch (e) { const message = e instanceof Error ? e.message : "Could not save service."; setError(message); notify.error(message); }
     finally { setBusy(false); }
   }
   async function toggle(row: Service) {
     setBusy(true); setError(""); setNotice("");
-    try { await request(`/${row._id}/status`, { method: "PATCH", body: JSON.stringify({ status: row.status === "active" ? "inactive" : "active" }) }); setNotice("Service visibility updated."); await load(); }
-    catch (e) { setError(e instanceof Error ? e.message : "Unable to change status."); }
+    try { await request(`/${row._id}/status`, { method: "PATCH", body: JSON.stringify({ status: row.status === "active" ? "inactive" : "active" }) }); setNotice(""); notify.success(row.status === "active" ? "Service hidden successfully." : "Service published successfully."); await load(); }
+    catch (e) { const message = e instanceof Error ? e.message : "Unable to change status."; setError(message); notify.error(message); }
     finally { setBusy(false); }
   }
   async function remove() {
     if (!confirmDelete) return;
     setBusy(true); setError("");
-    try { await request(`/${confirmDelete}`, { method: "DELETE" }); setConfirmDelete(null); setNotice("Service deleted."); await load(); }
-    catch (e) { setConfirmDelete(null); setError(e instanceof Error ? e.message : "Unable to delete service."); }
+    try { await request(`/${confirmDelete}`, { method: "DELETE" }); setConfirmDelete(null); setNotice(""); notify.success("Service deleted successfully."); await load(); }
+    catch (e) { setConfirmDelete(null); const message = e instanceof Error ? e.message : "Unable to delete service."; setError(message); notify.error(message); }
     finally { setBusy(false); }
   }
   const shown = rows.filter((s) => (filter === "all" || s.status === filter) && `${s.serviceName} ${s.category}`.toLowerCase().includes(query.toLowerCase()));
