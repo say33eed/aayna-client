@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Clock3, Search, RotateCw, X } from "lucide-react";
 import { loadServices, type Service } from "@/lib/public-services";
 import { notify } from "@/lib/notifications";
+import { API_BASE_URL } from "@/lib/api";
 
 const PAGE_SIZE = 9;
 const money = new Intl.NumberFormat("en-BD", { style: "currency", currency: "BDT", minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -44,6 +45,7 @@ export function ServiceCatalog() {
   const page = Number.isSafeInteger(pageParam) && pageParam > 0 ? pageParam : 1;
   const [query, setQuery] = useState(search);
   const [rows, setRows] = useState<Service[]>([]);
+  const [publicCategories, setPublicCategories] = useState<string[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
 
@@ -71,6 +73,11 @@ export function ServiceCatalog() {
     try {
       const result = await loadServices(true);
       setRows(result.rows.filter((s) => Boolean(s._id)));
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/services/categories`, { cache: "no-store" });
+        const data = await response.json() as { success?: boolean; data?: string[] };
+        if (response.ok && data.success && Array.isArray(data.data)) setPublicCategories(data.data);
+      } catch { /* Service list remains available if categories temporarily fail. */ }
       setState("ready");
     } catch (e) {
       setRows([]);
@@ -86,7 +93,7 @@ export function ServiceCatalog() {
     return () => window.clearTimeout(task);
   }, [refresh]);
 
-  const categories = useMemo(() => [...new Set(rows.map((s) => s.category?.trim()).filter((c): c is string => Boolean(c)))].sort((a,b) => a.localeCompare(b)), [rows]);
+  const categories = useMemo(() => [...new Set([...publicCategories, "Miscellaneous", ...rows.map((s) => s.category?.trim()).filter((c): c is string => Boolean(c))])].sort((a,b) => a.localeCompare(b)), [rows, publicCategories]);
   const filtered = useMemo(() => {
     const normalized = search.trim().toLocaleLowerCase();
     const result = rows.filter((s) => (!category || s.category === category) && (!normalized || s.serviceName?.toLocaleLowerCase().includes(normalized)));

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { AdminCategoryManager } from "@/components/dashboard/admin-category-manager";
 import Image from "next/image";
 import { CardGridSkeleton } from "@/components/ui/loading-skeleton";
 import { ActionSpinner } from "@/components/ui/action-spinner";
@@ -120,6 +121,7 @@ export function AdminServices() {
   const shown = rows.filter((s) => (filter === "all" || s.status === filter) && `${s.serviceName} ${s.category}`.toLowerCase().includes(query.toLowerCase()));
   return <section className="aaynaServices" aria-label="Manage services">
     <header className="aaynaServices_head"><div><span className="aaynaServices_kicker">THE COLLECTION / ADMIN</span><h2>Services<span>.</span></h2><p>Curate what your customers can discover and book.</p></div><button className="aaynaServices_primary" onClick={() => openForm()}><Plus size={18}/> Add service</button></header>
+    <AdminCategoryManager onChanged={() => { void load(); void loadCategories(); }} />
     <div className="aaynaServices_numbers"><div><strong>{rows.length}</strong><span>Total services</span></div><div><strong>{rows.filter((r) => r.status === "active").length}</strong><span>Live on Aayna</span></div><div><strong>{rows.filter((r) => r.status === "inactive").length}</strong><span>Hidden services</span></div></div>
     <div className="aaynaServices_toolbar"><label><Search size={18}/><input aria-label="Search services" placeholder="Find a service…" value={query} onChange={(e) => setQuery(e.target.value)}/></label><select aria-label="Filter by status" value={filter} onChange={(e) => setFilter(e.target.value)}><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
     {notice && <p className="aaynaServices_notice" role="status">{notice}</p>}{error && <p className="aaynaServices_error" role="alert">{error}</p>}
