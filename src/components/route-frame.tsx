@@ -17,7 +17,7 @@ export function RouteFrame({ children }: { children: React.ReactNode }) {
         <div className="site-container main-region"><main className="main-content">{children}</main></div>
         <Footer />
       </div>
-      <ApiStatus />
+      {/* <ApiStatus /> */}
     </>
   );
 }
