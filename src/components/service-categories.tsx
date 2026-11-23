@@ -20,6 +20,7 @@ export function ServiceCategories() {
   const [services, setServices] = useState<Service[]>([]);
   const [savedCategories, setSavedCategories] = useState<string[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     let alive = true;
@@ -38,7 +39,7 @@ export function ServiceCategories() {
       setState("ready");
     }).catch(() => { if (alive) setState("error"); });
     return () => { alive = false; };
-  }, []);
+  }, [retryKey]);
 
   const byCategory = new Map<string, Service>();
   for (const service of services) {
@@ -60,7 +61,7 @@ export function ServiceCategories() {
           <p>Explore the services that fit your needs.</p>
         </header>
         {state === "loading" && <div className="aayna-categories-grid" role="status" aria-label="Loading categories">{Array.from({length: 7}, (_, i) => <div className="aayna-categories-placeholder" key={i} />)}</div>}
-        {state === "error" && <div className="aayna-categories-message" role="alert">Categories are temporarily unavailable. <Link href="/services">Browse all services</Link></div>}
+        {state === "error" && <div className="aayna-categories-message" role="alert">Categories are temporarily unavailable. <button type="button" onClick={() => { setState("loading"); setRetryKey((key) => key + 1); }}>Try again</button> <Link href="/services">Browse all services</Link></div>}
         {state === "ready" && categories.length === 0 && <div className="aayna-categories-message">Categories will appear when they are configured.</div>}
         {state === "ready" && categories.length > 0 && (
           <div className="aayna-categories-grid">

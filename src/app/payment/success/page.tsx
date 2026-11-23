@@ -4,6 +4,7 @@ import { downloadReceiptPdf } from "@/lib/receipt-pdf";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "@/lib/api";
 import { notify } from "@/lib/notifications";
+import { ActionSpinner } from "@/components/ui/action-spinner";
 import { formatAaynaPrice, formatDhakaDate } from "@/lib/locale";
 
 type Receipt = { reference: string; appointmentId: string; serviceName: string; appointmentDate: string; timeSlot: string; amount: number; currency: string; paidAt: string; paymentStatus: "paid" };
@@ -37,7 +38,7 @@ export default function PaymentSuccessPage() {
     return () => { cancelled = true; controller.abort(); if (timeout) window.clearTimeout(timeout); };
   }, [sessionId, retryCount]);
   return <main className="aaynaReceipt_page" style={{ minHeight: "100dvh", display: "grid", placeItems: "center", padding: 24, background: "#fff", color: "#111" }}>
-    <section style={{ width: "100%", maxWidth: 560, border: "1px solid #e6e6e6", borderRadius: 20, padding: "clamp(28px,5vw,48px)", fontFamily: "var(--font-nunito),sans-serif" }}>
+    <section aria-busy={!receipt && (state === "checking" || state === "waiting")} style={{ width: "100%", maxWidth: 560, border: "1px solid #e6e6e6", borderRadius: 20, padding: "clamp(28px,5vw,48px)", fontFamily: "var(--font-nunito),sans-serif" }}>
       <p style={{ letterSpacing: ".18em", fontSize: 12, fontWeight: 800 }}>AAYNA / PAYMENT</p>
       <h1 style={{ fontSize: "clamp(30px,5vw,44px)", fontWeight: 800, margin: "20px 0 12px" }}>{receipt ? "Payment verified" : "Payment submitted"}<span style={{ color: "#ff5100" }}>.</span></h1>
       {receipt && receiptOpen ? <div id="aayna-receipt" aria-label="Payment receipt">
@@ -51,7 +52,7 @@ export default function PaymentSuccessPage() {
           <div><dt>Stripe reference</dt><dd style={{ fontSize: 12 }}>{receipt.reference}</dd></div>
         </dl>
         <div className="aaynaReceipt_actions"><button type="button" onClick={() => downloadReceiptPdf(receipt)}>Download PDF receipt</button><button type="button" onClick={() => setReceiptOpen(false)}>Close receipt</button></div>
-      </div> : receipt ? <button type="button" className="aaynaReceipt_reopen" onClick={() => setReceiptOpen(true)}>View receipt</button> : <p role="status" style={{ lineHeight: 1.7, color: "#555" }}>{state === "error" ? "We could not check this payment. Sign in to the paying account and check My appointments." : state === "timeout" ? "Payment confirmation is taking longer than expected. Check My appointments before attempting another payment, or retry verification below." : "Waiting for secure payment confirmation from Stripe. Do not pay again until you have checked your appointment status."}</p>}
+      </div> : receipt ? <button type="button" className="aaynaReceipt_reopen" onClick={() => setReceiptOpen(true)}>View receipt</button> : <div role="status" aria-live="polite" style={{ lineHeight: 1.7, color: "#555" }}>{(state === "checking" || state === "waiting") && <span style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 10 }}><ActionSpinner label="Verifying payment" /> Verifying payment securely</span>}<p>{state === "error" ? "We could not check this payment. Sign in to the paying account and check My appointments." : state === "timeout" ? "Payment confirmation is taking longer than expected. Check My appointments before attempting another payment, or retry verification below." : "Waiting for secure payment confirmation from Stripe. Do not pay again until you have checked your appointment status."}</p></div>}
       {!receipt && sessionId && /^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId) && (state === "timeout" || state === "error") && <button type="button" onClick={() => { setState("checking"); setRetryCount((count) => count + 1); }} style={{ marginTop: 16, padding: "12px 20px", borderRadius: 999, border: "1px solid #111", background: "#fff", color: "#111", fontWeight: 800, cursor: "pointer" }}>Retry verification</button>}
       <div><Link href="/dashboard/customer?view=appointments" style={{ display: "inline-flex", padding: "13px 22px", marginTop: 24, borderRadius: 999, background: receipt ? "#f2f2f2" : "#111", color: receipt ? "#111" : "#fff", fontWeight: 800 }}>View my appointments</Link></div>
     </section>

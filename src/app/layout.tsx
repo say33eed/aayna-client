@@ -4,6 +4,8 @@ import { RouteFrame } from "@/components/route-frame";
 import { AaynaToaster } from "@/components/aayna-toaster";
 import "./globals.css";
 import "./dashboard-global.css";
+import "./aayna-loading.css";
+import "./aayna-action-loading.css";
 import "../components/dashboard/admin-services.css";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-nunito" });

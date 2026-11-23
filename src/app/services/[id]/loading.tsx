@@ -1,0 +1,2 @@
+import { ContentSkeleton, Skeleton } from "@/components/ui/loading-skeleton";
+export default function Loading() { return <div className="aayna-loading-page"><Skeleton shape="line" style={{ width: "140px" }}/><div className="aayna-loading-service"><Skeleton className="aayna-loading-service-photo"/><div className="aayna-loading-service-info"><Skeleton shape="line" style={{ width: "40%" }}/><Skeleton shape="line" style={{ width: "85%", height: 36 }}/><ContentSkeleton rows={5} title="Loading service details"/></div></div></div>; }

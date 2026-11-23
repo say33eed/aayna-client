@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, ArrowRight, UserRound, Mail, LockKeyhole, Camera, Check } from "lucide-react";
 import { GoogleMark } from "@/components/auth/google-mark";
+import { ActionSpinner } from "@/components/ui/action-spinner";
 import "./auth-editorial.css";
 import { authClient } from "@/lib/auth-client";
 import { notify } from "@/lib/notifications";
@@ -207,10 +208,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
               </div>
             </>}
             {error && <p role="alert" className="auth-error">{error}</p>}
-            <Button type="submit" disabled={busy} className="auth-submit">{busy ? "Please wait…" : register ? "Create account" : "Sign in"}<ArrowRight size={18} aria-hidden="true"/></Button>
+            <Button type="submit" disabled={busy} aria-busy={busy} className="auth-submit">{busy ? <><ActionSpinner/>{register ? "Creating account…" : "Signing in…"}</> : <>{register ? "Create account" : "Sign in"}<ArrowRight size={18} aria-hidden="true"/></>}</Button>
           </form>
           <div className="auth-divider"><span>or</span></div>
-          <button type="button" onClick={googleSignIn} disabled={busy} className="auth-google"><GoogleMark/>Continue with Google</button>
+          <button type="button" onClick={googleSignIn} disabled={busy} aria-busy={busy} className="auth-google">{busy ? <ActionSpinner/> : <GoogleMark/>}{busy ? "Connecting…" : "Continue with Google"}</button>
           <p className="auth-switch">{register ? "Already have an account?" : "New to Aayna?"} <Link href={register ? "/sign-in" : "/sign-up"}>{register ? "Sign in" : "Create an account"}</Link></p>
           {register && <p className="auth-disclaimer">Registration creates a customer account. Admin access is assigned privately.</p>}
         </div>

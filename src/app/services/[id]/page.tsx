@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element -- Service images use variable remote hosts. */
 "use client";
 
+import { ContentSkeleton, Skeleton } from "@/components/ui/loading-skeleton";
+import { ActionSpinner } from "@/components/ui/action-spinner";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, CalendarDays, Clock3, ShieldCheck } from "lucide-react";
@@ -82,14 +84,14 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
     }
   }
 
-  if (isPending) return <main className="aayna-booking-gate" role="status">Checking your account…</main>;
+  if (isPending) return <main className="aayna-loading-page" role="status" aria-label="Checking your account"><Skeleton shape="line" style={{ width: "35%", height: 30 }}/><ContentSkeleton rows={4} title="Checking your account" /></main>;
   if (!session?.user) return <main className="aayna-booking-gate"><p className="aayna-featured-kicker">MEMBERS ONLY</p><h1>Sign in to continue.</h1><p>Service details and appointment requests are available to AAYNA customers.</p><Link href={`/sign-in?next=${encodeURIComponent(`/services/${id}`)}`} className="aayna-booking-primary">Sign in <ArrowUpRight size={18} /></Link><Link href="/services">Browse all services</Link></main>;
   if (user?.isBlocked) return <main className="aayna-booking-gate"><h1>Account access restricted.</h1><p>Contact support for assistance.</p></main>;
   
 
   return <main className="aayna-booking-page">
     <Link href="/services" className="aayna-booking-back"><ArrowLeft size={17} /> All services</Link>
-    {state === "loading" && <p role="status">Loading service details…</p>}
+    {state === "loading" && <div className="aayna-loading-service" role="status" aria-label="Loading service details"><Skeleton className="aayna-loading-service-photo"/><ContentSkeleton rows={5} title="Loading service details"/></div>}
     {state === "error" && <p role="alert">Service details are temporarily unavailable. Please try again.</p>}
     {state === "missing" && <div className="aayna-booking-gate"><h1>Service unavailable.</h1><p>This service may have been removed or made inactive.</p><Link href="/services">Browse active services</Link></div>}
     {state === "ready" && service && <div className="aayna-booking-layout">
@@ -122,7 +124,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
             <textarea id="aayna-booking-message" maxLength={500} rows={4} placeholder="Anything the salon should know?" value={message} onChange={(event) => setMessage(event.target.value)} />
             <div className="aayna-booking-total"><span>Service price</span><strong>{money.format(service.price)}</strong></div>
             {notice && <p role="alert" className="aayna-booking-error">{notice}</p>}
-            <button className="aayna-booking-primary" disabled={submitState === "sending" || !slot || !date || slotsState !== "ready"} type="submit">{submitState === "sending" ? "Submitting…" : "Request appointment"}<ArrowUpRight size={18} /></button>
+            <button className="aayna-booking-primary" disabled={submitState === "sending" || !slot || !date || slotsState !== "ready"} type="submit">{submitState === "sending" ? <><ActionSpinner label="Submitting appointment" /> Submitting…</> : "Request appointment"}<ArrowUpRight size={18} /></button>
             <p className="aayna-booking-hint">Your request will be Pending and Unpaid until reviewed.</p>
           </form>}
       </section> : <section className="aayna-booking-panel"><h2>Service preview</h2><p>Administrators can review service information here. Appointment booking is reserved for customers.</p></section>}
