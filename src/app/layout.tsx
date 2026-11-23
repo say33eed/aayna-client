@@ -4,6 +4,7 @@ import { Nunito_Sans, Quicksand, Hind_Siliguri } from "next/font/google";
 import { RouteFrame } from "@/components/route-frame";
 import { AaynaToaster } from "@/components/aayna-toaster";
 import "./globals.css";
+import "./aayna-not-found.css";
 import "./dashboard-global.css";
 import "./aayna-loading.css";
 import "./aayna-action-loading.css";

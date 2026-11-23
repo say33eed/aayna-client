@@ -95,3 +95,24 @@
 [data-aayna-dashboard] select{min-height:44px;padding:10px 36px 10px 14px;border-radius:12px;line-height:1.5;cursor:pointer;color:var(--aayna-dash-fg,#111);background:var(--aayna-dash-bg,#fff);color-scheme:light}
 :root[data-theme="dark"] [data-aayna-dashboard] select{color-scheme:dark}
 [data-aayna-dashboard] select option{background:var(--aayna-dash-bg,#fff);color:var(--aayna-dash-fg,#111);padding:10px}
+
+/* Workspace shortcuts are real navigation, not roadmap placeholders. */
+.aaynaAdmin_next>a{display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);font-size:13px;font-weight:650;text-decoration:none;color:inherit;transition:opacity .15s ease}
+.aaynaAdmin_next>a svg:last-child{margin-left:auto}
+.aaynaAdmin_next>a:hover{opacity:.62}
+.aaynaAdmin_next>a:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:4px}
+
+/* Accent orange is reserved for the Aayna wordmark. */
+.aaynaLedger_hero h2 span,.aaynaLedger_drawer h2 span,.aaynaAdmin_accent{color:inherit}
+
+/* v0.68 dashboard polish: consistent interactive affordances in both themes. */
+.aaynaDash_heading{margin-bottom:28px}.aaynaDash_heading h1{margin:0;font-size:clamp(30px,3.5vw,48px)}
+.aaynaDash_frame :is(button,a):not(:disabled){transition:background-color .18s ease,color .18s ease,border-color .18s ease,opacity .18s ease,transform .18s ease}
+.aaynaDash_frame :is(button,a):focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.aaynaDash_frame button:disabled{cursor:not-allowed;opacity:.5}
+.aaynaDash_frame :is(.aaynaUsers_intro,.aaynaLedger_hero,.aaynaServices_header,.aaynaJournal_adminHead) :is(.aaynaUsers_kicker,.aaynaLedger_kicker,.aaynaServices_kicker,.aaynaJournal_kicker){display:none}
+.aaynaDash_frame .aaynaUsers_intro h2,.aaynaDash_frame .aaynaLedger_hero h2{font-size:clamp(22px,2.5vw,32px);line-height:1.2;margin:0}
+.aaynaDash_frame .aaynaUsers_intro h2 br,.aaynaDash_frame .aaynaLedger_hero h2 br{display:none}
+.aaynaDash_frame .aaynaUsers_intro p,.aaynaDash_frame .aaynaLedger_hero p,.aaynaDash_frame .aaynaServices_header p,.aaynaDash_frame .aaynaJournal_adminHead p{display:none}
+.aaynaDash_frame .aaynaUsers_intro,.aaynaDash_frame .aaynaLedger_hero{margin-top:8px;margin-bottom:24px}
+@media(prefers-reduced-motion:reduce){.aaynaDash_frame :is(button,a){transition:none!important}}

@@ -6,6 +6,7 @@ import { ContentSkeleton, Skeleton } from "@/components/ui/loading-skeleton";
 import { ActionSpinner } from "@/components/ui/action-spinner";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, CalendarDays, Clock3, ShieldCheck } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { loadServices, type Service } from "@/lib/public-services";
@@ -92,11 +93,12 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
   if (user?.isBlocked) return <main className="aayna-booking-gate"><h1>Account access restricted.</h1><p>Contact support for assistance.</p></main>;
   
 
+  if (state === "missing") notFound();
+
   return <main className="aayna-booking-page">
     <Link href="/services" className="aayna-booking-back"><ArrowLeft size={17} /> All services</Link>
     {state === "loading" && <div className="aayna-loading-service" role="status" aria-label="Loading service details"><Skeleton className="aayna-loading-service-photo"/><ContentSkeleton rows={5} title="Loading service details"/></div>}
     {state === "error" && <p role="alert">Service details are temporarily unavailable. Please try again.</p>}
-    {state === "missing" && <div className="aayna-booking-gate"><h1>Service unavailable.</h1><p>This service may have been removed or made inactive.</p><Link href="/services">Browse active services</Link></div>}
     {state === "ready" && service && <div className="aayna-booking-layout">
       <section className="aayna-booking-service" aria-labelledby="aayna-booking-title">
         <div className="aayna-booking-image">

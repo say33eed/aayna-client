@@ -1,0 +1,17 @@
+/* Aayna not-found states: imported globally from root layout to work for all routes. */
+.aayna-error-page { width:100%; min-height:clamp(430px,66vh,760px); display:flex; align-items:center; justify-content:center; padding:clamp(64px,8vw,112px) 24px; color:var(--foreground); }
+.aayna-error-panel { width:min(100%,660px); margin-inline:auto; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.aayna-error-icon { width:76px; height:76px; display:grid; place-items:center; border:1px solid var(--border); border-radius:22px; background:var(--surface); margin-bottom:26px; }
+.aayna-error-kicker { margin:0 0 14px; color:var(--muted); font-size:12px; line-height:1.5; font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
+.aayna-error-title { margin:0 0 18px; font-size:clamp(36px,5vw,64px); font-weight:800; letter-spacing:-.055em; line-height:1.1; }
+.aayna-error-copy { margin:0; max-width:510px; color:var(--muted); font-size:clamp(15px,1.5vw,17px); line-height:1.75; }
+.aayna-error-actions { margin-top:34px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.aayna-error-action { min-height:48px; padding:12px 24px; display:inline-flex; align-items:center; justify-content:center; gap:10px; border-radius:999px; font-size:14px; font-weight:750; text-decoration:none; transition:background-color .18s,color .18s,border-color .18s,transform .18s; }
+.aayna-error-action--primary { background:var(--foreground); color:var(--background); border:1px solid var(--foreground); }
+.aayna-error-action--secondary { background:var(--surface); color:var(--foreground); border:1px solid var(--border); }
+.aayna-error-action:hover { transform:translateY(-2px); }
+.aayna-error-action--primary:hover { opacity:.86; }
+.aayna-error-action--secondary:hover { border-color:var(--foreground); background:var(--background); }
+.aayna-error-action:focus-visible { outline:2px solid var(--foreground); outline-offset:4px; }
+@media(max-width:520px) { .aayna-error-page { padding:56px 20px; min-height:58vh; } .aayna-error-actions { width:100%; flex-direction:column; } .aayna-error-action { width:100%; } }
+@media(prefers-reduced-motion:reduce) { .aayna-error-action { transition:none; } .aayna-error-action:hover { transform:none; } }

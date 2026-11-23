@@ -546,3 +546,16 @@ body:has([data-aayna-dashboard]) .main-content { display:block; }
 .aayna-browse-toolbar .aayna-browse-select .aayna-select-trigger{height:100%;min-height:52px;border:1px solid var(--border);border-radius:12px;background:var(--background);padding:0 18px;font-size:14px}
 .aayna-browse-toolbar .aayna-browse-select:focus-within{outline:none}
 .aayna-browse-toolbar .aayna-browse-select .aayna-select-trigger:focus-visible{outline:2px solid var(--foreground);outline-offset:2px}
+
+/* Shared Aayna 404 system. Uses existing theme tokens. */
+.aaynaNotFound{min-height:65vh;display:grid;place-items:center;padding:100px 24px;color:var(--foreground)}
+.aaynaNotFound_inner{width:min(100%,620px)}
+.aaynaNotFound_code{font-size:11px;font-weight:750;letter-spacing:.16em;margin:28px 0 16px;opacity:.6}
+.aaynaNotFound h1{font-size:clamp(40px,6vw,72px);line-height:1.05;letter-spacing:-.06em;font-weight:650;margin:0 0 22px}
+.aaynaNotFound_inner>p:not(.aaynaNotFound_code){max-width:440px;line-height:1.8;opacity:.65}
+.aaynaNotFound_actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.aaynaNotFound_primary,.aaynaNotFound_secondary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:13px 22px;border-radius:999px;font-size:13px;font-weight:700;text-decoration:none}
+.aaynaNotFound_primary{background:var(--foreground);color:var(--background)}
+.aaynaNotFound_secondary{border:1px solid color-mix(in srgb,currentColor 25%,transparent);color:inherit}
+.aaynaNotFound_primary:hover,.aaynaNotFound_secondary:hover{opacity:.8}
+.aaynaNotFound_primary:focus-visible,.aaynaNotFound_secondary:focus-visible{outline:2px solid currentColor;outline-offset:3px}
