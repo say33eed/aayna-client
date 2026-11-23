@@ -22,6 +22,8 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
   const { id } = use(params);
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user as ({ id: string; role?: string; isBlocked?: boolean }) | undefined;
+  const userId = user?.id;
+  const isBlocked = user?.isBlocked;
   const [service, setService] = useState<Service | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "missing" | "error">("loading");
   const [date, setDate] = useState("");
@@ -34,7 +36,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
   const [refreshSlots, setRefreshSlots] = useState(0);
 
   useEffect(() => {
-    if (!user || user.isBlocked) return;
+    if (!userId || isBlocked) return;
     let active = true;
     void loadServices(true).then((entry) => {
       if (!active) return;
@@ -43,7 +45,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
       setState(found ? "ready" : "missing");
     }).catch(() => { if (active) setState("error"); });
     return () => { active = false; };
-  }, [id, session?.user, user?.role, user?.isBlocked]);
+  }, [id, userId, isBlocked]);
 
   useEffect(() => {
     if (!service || !date) return;

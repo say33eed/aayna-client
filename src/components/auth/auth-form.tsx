@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, ArrowRight, UserRound, Mail, LockKeyhole, Camera, Check } from "lucide-react";
 import { GoogleMark } from "@/components/auth/google-mark";
@@ -202,7 +203,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
                 <span className="auth-photo-label">Profile photo <small>Optional</small></span>
                 <label className="auth-photo-upload"><Camera size={17} aria-hidden="true"/> Choose a photo <span>JPEG, PNG, WebP or GIF · up to 5 MB</span><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={selectPhoto} disabled={busy}/></label>
                 <details className="auth-photo-url"><summary>Or add a photo URL</summary><input aria-label="Direct profile image URL" className={inputClass} value={image} onChange={(e)=>{setImage(e.target.value);setPhoto(null);setPhotoPreview("");setPhotoStatus(e.target.value.trim() ? "checking" : "empty");}} type="url" maxLength={2048} placeholder="https://example.com/photo.jpg" disabled={busy}/></details>
-                {(photoPreview || (image.trim() && photoStatus === "valid")) && <div className="auth-photo-preview">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={photoPreview || image.trim()} alt="Profile photo preview"/><span><Check size={14} aria-hidden="true"/>{photo ? photo.name : "Image preview loaded"}</span></div>}
+                {(photoPreview || (image.trim() && photoStatus === "valid")) && <div className="auth-photo-preview"><NextImage src={photoPreview || image.trim()} alt="Profile photo preview" width={72} height={72} unoptimized/><span><Check size={14} aria-hidden="true"/>{photo ? photo.name : "Image preview loaded"}</span></div>}
                 {!photo && image.trim() && photoStatus === "checking" && <p className="auth-hint">Checking image URL…</p>}
                 {!photo && image.trim() && photoStatus === "invalid" && <p role="alert" className="auth-error">This image URL could not be loaded. Try a direct HTTPS link or upload a photo.</p>}
               </div>
