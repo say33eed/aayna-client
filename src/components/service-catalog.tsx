@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- Service images use variable remote hosts. */
 "use client";
 
+import { AaynaSelect } from "@/components/ui/aayna-select";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -109,8 +110,8 @@ export function ServiceCatalog() {
   return <div className="aayna-browse-catalog" aria-busy={state === "loading"}>
     <div className="aayna-browse-toolbar">
       <label className="aayna-browse-search"><Search size={20} aria-hidden="true" /><span className="sr-only">Search services by name</span><input type="search" placeholder="Search services by name" value={query} onChange={(e) => setQuery(e.target.value)} /></label>
-      <label className="aayna-browse-select"><span className="sr-only">Filter by category</span><select value={category} onChange={(e) => update({ category: e.target.value, page: null })}><option value="">All categories</option>{category && !categories.includes(category) && <option value={category}>{category}</option>}{categories.map((name) => <option key={name} value={name}>{name}</option>)}</select></label>
-      <label className="aayna-browse-select"><span className="sr-only">Sort services by price</span><select value={sort} onChange={(e) => update({ sort: e.target.value, page: null })}><option value="default">Recommended order</option><option value="price_asc">Price: Low to High</option><option value="price_desc">Price: High to Low</option></select></label>
+      <label className="aayna-browse-select"><span className="sr-only">Filter by category</span><AaynaSelect value={category} onChange={(e) => update({ category: e.target.value, page: null })}><option value="">All categories</option>{category && !categories.includes(category) && <option value={category}>{category}</option>}{categories.map((name) => <option key={name} value={name}>{name}</option>)}</AaynaSelect></label>
+      <label className="aayna-browse-select"><span className="sr-only">Sort services by price</span><AaynaSelect value={sort} onChange={(e) => update({ sort: e.target.value, page: null })}><option value="default">Recommended order</option><option value="price_asc">Price: Low to High</option><option value="price_desc">Price: High to Low</option></AaynaSelect></label>
     </div>
     {state === "error" && <div className="aayna-browse-notice" role="alert"><p>{error}</p><button type="button" onClick={() => void refresh(true)}><RotateCw size={16} /> Try again</button></div>}
     {state === "loading" && <div className="aayna-browse-grid" role="status" aria-label="Loading services">{Array.from({ length: 6 }, (_, i) => <div className="aayna-browse-skeleton" key={i} />)}</div>}

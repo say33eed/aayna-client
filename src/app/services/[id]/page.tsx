@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- Service images use variable remote hosts. */
 "use client";
 
+import { AaynaSelect } from "@/components/ui/aayna-select";
 import { ContentSkeleton, Skeleton } from "@/components/ui/loading-skeleton";
 import { ActionSpinner } from "@/components/ui/action-spinner";
 import { use, useEffect, useState } from "react";
@@ -116,10 +117,10 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
             <label htmlFor="aayna-booking-date">Appointment date</label>
             <div className="aayna-booking-inputWrap"><CalendarDays size={18} /><input id="aayna-booking-date" type="date" required min={today()} value={date} onChange={(event) => { setDate(event.target.value); setSlot(""); setSlots([]); setSlotsState("idle"); setNotice(""); }} /></div>
             <label htmlFor="aayna-booking-slot">Available time slot <span>(Bangladesh time)</span></label>
-            <select id="aayna-booking-slot" value={slot} onChange={(event) => setSlot(event.target.value)} required disabled={!date || slotsState !== "ready"}>
+            <AaynaSelect id="aayna-booking-slot" value={slot} onChange={(event) => setSlot(event.target.value)} required disabled={!date || slotsState !== "ready"}>
               <option value="">{slotsState === "loading" ? "Checking availability…" : "Select a time"}</option>
               {slots.filter((item) => item.available).map((item) => <option value={item.time} key={item.time}>{item.time}</option>)}
-            </select>
+            </AaynaSelect>
             {slotsState === "ready" && <p className="aayna-booking-hint">{slots.filter((item) => item.available).length} of {slots.length} slots currently open. Final availability is verified when you submit.</p>}
             {slotsState === "error" && <p role="alert" className="aayna-booking-error">Couldn&apos;t check availability. Change the date or try again shortly.</p>}
             <label htmlFor="aayna-booking-message">Message <span>(optional)</span></label>

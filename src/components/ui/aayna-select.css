@@ -1,0 +1,26 @@
+/* Aayna dropdown: one shared surface across public and admin screens. */
+.aayna-select{position:relative;display:inline-block;min-width:0;width:100%;font:inherit;color:var(--foreground,#111)}
+.aayna-select-trigger{width:100%;min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 16px;border:1px solid var(--border,#ddd);border-radius:12px;background:var(--surface,#fff);color:var(--foreground,#111);font:inherit;font-size:14px;line-height:1.4;text-align:left;transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
+.aayna-select-trigger:hover:not(:disabled){border-color:var(--foreground,#111)}
+.aayna-select-trigger:focus-visible{outline:2px solid var(--foreground,#111);outline-offset:3px}
+.aayna-select-trigger:disabled{opacity:.48;cursor:not-allowed}
+.aayna-select-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aayna-select-placeholder{opacity:.68}
+.aayna-select-chevron{flex-shrink:0;transition:transform .18s ease}
+.aayna-select-chevron.is-open{transform:rotate(180deg)}
+.aayna-select-native{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important;inset:auto auto 0 0!important}
+.aayna-select-menu{position:fixed;z-index:9999;max-width:min(420px,calc(100vw - 24px));max-height:min(320px,60vh);overflow-y:auto;overscroll-behavior:contain;padding:8px;border:1px solid var(--border,#ddd);border-radius:16px;background:var(--background,#fff);color:var(--foreground,#111);box-shadow:0 16px 50px rgba(0,0,0,.16);font-family:inherit;scrollbar-width:thin}
+.aayna-select-option{width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 14px;border:0;border-radius:10px;background:transparent;color:inherit;font:inherit;font-size:14px;font-weight:550;line-height:1.45;text-align:left;cursor:pointer;transition:background-color .15s ease}
+.aayna-select-option:hover:not(:disabled),.aayna-select-option:focus-visible{background:var(--surface,#f3f3f3);outline:none}
+.aayna-select-option[aria-selected="true"]{font-weight:750;background:var(--surface,#f3f3f3)}
+.aayna-select-option:disabled{opacity:.4;cursor:not-allowed}
+:root[data-theme="dark"] .aayna-select-menu{box-shadow:0 18px 55px rgba(0,0,0,.5)}
+@media(max-width:600px){.aayna-select-menu{max-width:calc(100vw - 24px)}.aayna-select-option{min-height:52px}}
+@media(prefers-reduced-motion:reduce){.aayna-select-trigger,.aayna-select-option,.aayna-select-chevron{transition:none}}
+
+/* v0.67: generous inset around selected and hovered option surfaces. */
+.aayna-select-menu{padding:10px 8px}
+.aayna-select-option{width:calc(100% - 12px);margin:4px 6px;min-height:50px;padding:14px 18px;border-radius:12px}
+.aayna-select-option:hover:not(:disabled),.aayna-select-option:focus-visible{background:var(--surface,#f3f3f3)}
+.aayna-select-option[aria-selected="true"]{background:var(--surface,#f3f3f3)}
+@media(max-width:600px){.aayna-select-option{min-height:54px}}
