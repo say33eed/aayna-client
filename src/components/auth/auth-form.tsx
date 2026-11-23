@@ -3,7 +3,9 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, UserRound, Mail, LockKeyhole, Camera, Check } from "lucide-react";
+import { GoogleMark } from "@/components/auth/google-mark";
+import "./auth-editorial.css";
 import { authClient } from "@/lib/auth-client";
 import { notify } from "@/lib/notifications";
 import { Button } from "@/components/ui/button";
@@ -158,54 +160,61 @@ export function AuthForm({ mode }: { mode: Mode }) {
     } finally { setBusy(false); }
   }
 
-  const inputClass = "h-12 w-full rounded-xl border-2 border-[var(--border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--muted)] focus:border-[#FF5100] focus-visible:ring-[3px] focus-visible:ring-[#FF5100]/20";
+  const inputClass = "auth-input";
   return (
-    <section className="mx-auto w-full max-w-[440px] py-10 sm:py-16">
-      <div className="mb-9 text-center">
-        <p className="mb-4 text-xl font-extrabold tracking-[-0.08em]">aayna<span className="text-[#FF5100]">.</span></p>
-        <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#FF5100]">{register ? "Join AAYNA" : "Welcome back"}</p>
-        <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">{register ? "Create your account" : "Sign in to AAYNA"}</h1>
-        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{register ? "Discover services and manage appointments in one place." : "Your services and appointments, all in one place."}</p>
+    <section className="auth-editorial" aria-label={register ? "Create your Aayna account" : "Sign in to Aayna"}>
+      <div className="auth-story" aria-hidden="true">
+        <div className="auth-art">
+          <div className="auth-art-mirror" />
+          <div className="auth-art-shadow" />
+          <div className="auth-art-shelf" />
+          <div className="auth-art-jar" />
+          <div className="auth-art-brush auth-art-brush-one" />
+          <div className="auth-art-brush auth-art-brush-two" />
+          <div className="auth-art-brush auth-art-brush-three" />
+        </div>
+        <div className="auth-story-copy">
+          <span className="auth-story-line" />
+          <p className="auth-overline">A little time for yourself</p>
+          <h2>{register ? <>Your next look<br/>starts here.</> : <>Your moments,<br/>beautifully booked.</>}</h2>
+          <p>Discover thoughtful beauty and grooming experiences, all in one place.</p>
+          <span className="auth-story-index">AAYNA / EVERYDAY, REIMAGINED</span>
+        </div>
       </div>
-      <div className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.035)] sm:p-8">
-        <button type="button" onClick={googleSignIn} disabled={busy} className="mb-6 flex h-12 w-full items-center justify-center gap-3 rounded-xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--foreground)] transition-colors hover:border-[#FF5100] focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-[#FF5100] disabled:opacity-50">
-          <span aria-hidden="true" className="font-bold text-[#FF5100]">G</span> Continue with Google
-        </button>
-        <div className="mb-6 flex items-center gap-3 text-xs text-[var(--muted)]"><span className="h-px flex-1 bg-[var(--border)]"/><span>or use email</span><span className="h-px flex-1 bg-[var(--border)]"/></div>
-        <form onSubmit={submit} className="flex flex-col gap-4">
-          {register && <>
-            <label className="flex flex-col gap-2 text-sm font-semibold">Full name<input className={inputClass} value={name} onChange={(e)=>setName(e.target.value)} required minLength={2} maxLength={100} autoComplete="name" placeholder="Your full name"/></label>
-            <div className="flex flex-col gap-3 text-sm font-semibold">
-              <span>Profile photo <span className="text-xs font-normal text-[var(--muted)]">(optional)</span></span>
-              <label className="flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-[var(--border)] p-4 text-sm transition-colors hover:border-[#FF5100]">
-                Choose photo to upload (max 5 MB)
-                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={selectPhoto} disabled={busy}/>
-              </label>
-              <span className="text-center text-xs font-normal text-[var(--muted)]">or use a direct image URL</span>
-              <input aria-label="Direct profile image URL" className={inputClass} value={image} onChange={(e)=>{setImage(e.target.value);setPhoto(null);setPhotoPreview("");setPhotoStatus(e.target.value.trim() ? "checking" : "empty");}} type="url" maxLength={2048} placeholder="https://example.com/photo.jpg" disabled={busy}/>
-              {(photoPreview || (image.trim() && photoStatus === "valid")) && <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photoPreview || image.trim()} alt="Profile photo preview" className="h-14 w-14 rounded-full border border-[var(--border)] object-cover"/>
-                <span className="text-xs font-normal text-[var(--muted)]">{photo ? photo.name : "Image preview loaded"}</span>
-              </div>}
-              {!photo && image.trim() && photoStatus === "checking" && <span className="text-xs font-normal text-[var(--muted)]">Checking image URL…</span>}
-              {!photo && image.trim() && photoStatus === "invalid" && <span role="alert" className="text-xs font-normal text-red-500">This URL does not load as an image. Use a direct image link or upload a photo.</span>}
-            </div>
-          </>}
-          <label className="flex flex-col gap-2 text-sm font-semibold">Email address<input className={inputClass} value={email} onChange={(e)=>setEmail(e.target.value)} type="email" autoComplete="email" required placeholder="you@example.com"/></label>
-          <label className="flex flex-col gap-2 text-sm font-semibold">Password
-            <span className="relative"><input className={`${inputClass} pr-12`} value={password} onChange={(e)=>setPassword(e.target.value)} type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} required minLength={6} placeholder="Enter your password"/><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={()=>setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-2 text-[var(--muted)] hover:text-[var(--foreground)]">{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></span>
-          </label>
-          {register && <>
-            <p className="text-xs text-[var(--muted)]" aria-live="polite">Password: 6+ characters, one uppercase and one lowercase letter.</p>
-            <label className="flex flex-col gap-2 text-sm font-semibold">Confirm password<input className={inputClass} value={confirm} onChange={(e)=>setConfirm(e.target.value)} type="password" autoComplete="new-password" required placeholder="Repeat your password"/></label>
-          </>}
-          {error && <p role="alert" className="rounded-lg border border-red-500/40 p-3 text-sm text-red-500">{error}</p>}
-          <Button type="submit" disabled={busy} className="mt-2 h-12 w-full">{busy ? "Please wait…" : register ? "Create account" : "Sign in"} <ArrowRight size={17} aria-hidden="true"/></Button>
-        </form>
-        <p className="mt-6 text-center text-sm text-[var(--muted)]">{register ? "Already have an account?" : "New to AAYNA?"}{" "}<Link className="font-bold text-[var(--foreground)] underline underline-offset-4 hover:text-[#FF5100]" href={register ? "/sign-in" : "/sign-up"}>{register ? "Sign in" : "Create an account"}</Link></p>
+      <div className="auth-form-side">
+        <div className="auth-form-wrap">
+          <div className="auth-heading">
+            <p className="auth-overline">{register ? "AAYNA / GET STARTED" : "AAYNA / WELCOME BACK"}</p>
+            <h1>{register ? "Create an account" : "Welcome back"}</h1>
+            <p>{register ? "A better way to discover and book your next appointment." : "Sign in to pick up right where you left off."}</p>
+          </div>
+          <form onSubmit={submit} className="auth-fields">
+            {register && <>
+              <label className="auth-field"><span>Full name</span><span className="auth-input-wrap"><UserRound size={18} aria-hidden="true"/><input className={inputClass} value={name} onChange={(e)=>setName(e.target.value)} required minLength={2} maxLength={100} autoComplete="name" placeholder="Your full name"/></span></label>
+            </>}
+            <label className="auth-field"><span>Email address</span><span className="auth-input-wrap"><Mail size={18} aria-hidden="true"/><input className={inputClass} value={email} onChange={(e)=>setEmail(e.target.value)} type="email" autoComplete="email" required placeholder="you@example.com"/></span></label>
+            <label className="auth-field"><span>Password</span><span className="auth-input-wrap"><LockKeyhole size={18} aria-hidden="true"/><input className="auth-input auth-password-input" value={password} onChange={(e)=>setPassword(e.target.value)} type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} required minLength={6} placeholder={register ? "Create a password" : "Enter your password"}/><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} onClick={()=>setShowPassword(!showPassword)} className="auth-eye">{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></span></label>
+            {register && <>
+              <p className="auth-hint" aria-live="polite">6+ characters, including uppercase and lowercase letters.</p>
+              <label className="auth-field"><span>Confirm password</span><span className="auth-input-wrap"><LockKeyhole size={18} aria-hidden="true"/><input className={inputClass} value={confirm} onChange={(e)=>setConfirm(e.target.value)} type="password" autoComplete="new-password" required placeholder="Repeat your password"/></span></label>
+              <div className="auth-photo">
+                <span className="auth-photo-label">Profile photo <small>Optional</small></span>
+                <label className="auth-photo-upload"><Camera size={17} aria-hidden="true"/> Choose a photo <span>JPEG, PNG, WebP or GIF · up to 5 MB</span><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={selectPhoto} disabled={busy}/></label>
+                <details className="auth-photo-url"><summary>Or add a photo URL</summary><input aria-label="Direct profile image URL" className={inputClass} value={image} onChange={(e)=>{setImage(e.target.value);setPhoto(null);setPhotoPreview("");setPhotoStatus(e.target.value.trim() ? "checking" : "empty");}} type="url" maxLength={2048} placeholder="https://example.com/photo.jpg" disabled={busy}/></details>
+                {(photoPreview || (image.trim() && photoStatus === "valid")) && <div className="auth-photo-preview">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={photoPreview || image.trim()} alt="Profile photo preview"/><span><Check size={14} aria-hidden="true"/>{photo ? photo.name : "Image preview loaded"}</span></div>}
+                {!photo && image.trim() && photoStatus === "checking" && <p className="auth-hint">Checking image URL…</p>}
+                {!photo && image.trim() && photoStatus === "invalid" && <p role="alert" className="auth-error">This image URL could not be loaded. Try a direct HTTPS link or upload a photo.</p>}
+              </div>
+            </>}
+            {error && <p role="alert" className="auth-error">{error}</p>}
+            <Button type="submit" disabled={busy} className="auth-submit">{busy ? "Please wait…" : register ? "Create account" : "Sign in"}<ArrowRight size={18} aria-hidden="true"/></Button>
+          </form>
+          <div className="auth-divider"><span>or</span></div>
+          <button type="button" onClick={googleSignIn} disabled={busy} className="auth-google"><GoogleMark/>Continue with Google</button>
+          <p className="auth-switch">{register ? "Already have an account?" : "New to Aayna?"} <Link href={register ? "/sign-in" : "/sign-up"}>{register ? "Sign in" : "Create an account"}</Link></p>
+          {register && <p className="auth-disclaimer">Registration creates a customer account. Admin access is assigned privately.</p>}
+        </div>
       </div>
-      <p className="mt-5 text-center text-xs leading-5 text-[var(--muted)]">Public registration creates customer accounts only. Admin access is assigned privately.</p>
     </section>
   );
 }
