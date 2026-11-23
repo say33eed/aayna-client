@@ -8,7 +8,7 @@ type Session = { user?: { name?: string; email?: string; role?: string; isBlocke
 export default async function Dashboard({ params, searchParams }: { params: Promise<{ role: string }>; searchParams: Promise<{ view?: string }> }) {
   const { role } = await params;
   const { view } = await searchParams;
-  const activeView = view === "appointments" && (role === "customer" || role === "admin") ? "appointments" : view === "services" && role === "admin" ? "services" : "overview";
+  const activeView = view === "appointments" && (role === "customer" || role === "admin") ? "appointments" : view === "services" && role === "admin" ? "services" : view === "users" && role === "admin" ? "users" : view === "transactions" && role === "admin" ? "transactions" : view === "profile" ? "profile" : "overview";
   if (role !== "customer" && role !== "admin") notFound();
   let session: Session;
   try {
