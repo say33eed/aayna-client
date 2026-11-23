@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AAYNA — Looking good, simplified.
 
-## Getting Started
+AAYNA is a responsive salon and self-care discovery and appointment booking platform. Customers can explore services, request appointments, and complete supported payments. Administrators manage services, users, transactions, and self-care journal articles. The interface supports light and dark themes.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| Resource | Link |
+| --- | --- |
+| Live website | `https://aayna-client.vercel.app/` |
+| Client repository | `https://github.com/say33eed/aayna-client` |
+| Server repository | `https://github.com/say33eed/aayna-server` |
+
+## Important features
+
+- Browse and search salon services with category and sorting filters.
+- View individual services, request appointments, and follow booking/payment status.
+- Email/password and Google sign-in through Better Auth.
+- Customer and administrator dashboards with role-aware navigation.
+- Admin service and category management, user management, and transaction views.
+- Self-Care Journal with article listings and individual articles; administrators can manage content.
+- Featured homepage content, How It Works section, responsive navigation, and branded empty/not-found states.
+- Accessible branded dropdowns and light/dark theme support.
+
+## Technology stack
+
+Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Better Auth, React Hook Form, Zod, TanStack Query, Lucide React, and Sonner. The frontend connects to a separate Node.js/Express/MongoDB API. Stripe handles test-mode checkout on the backend.
+
+## Prerequisites
+
+- Node.js 22 and npm
+- Running AAYNA API server (see server README)
+- Environment configuration for both applications
+
+## Installation and local development
+
+```powershell
+git clone https://github.com/say33eed/aayna-client.git
+cd aayna-client
+npm ci
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a local `.env.local` (never commit it) and configure the required values listed below. Then run:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Visit `http://localhost:3000`. The backend should be running separately, normally at `http://localhost:5000`.
 
-## Learn More
+## Required environment variable names
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Public API base URL used by the client |
+| `API_PROXY_TARGET` | Server-side destination for Next.js API proxy requests |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set URLs according to your actual local or deployed API configuration. Do not put server secrets in `NEXT_PUBLIC_*` variables. Authentication, database, Google OAuth, Stripe, and ImgBB credentials belong on the server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Validation and production
 
-## Deploy on Vercel
+```powershell
+npm run lint
+npm run build
+npm start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy the client to a Next.js-compatible host such as Vercel. Configure the environment variables in the hosting dashboard and allow the deployed client origin in the API server configuration. Verify direct navigation and refresh for public, authenticated, and dashboard routes. Test Stripe checkout using test-mode credentials and a correctly configured webhook before submission.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Security
+
+Never commit `.env`, `.env.local`, access tokens, OAuth secrets, MongoDB credentials, Stripe secrets, or ImgBB API keys. Use separate client/server repositories and server-side role checks for protected API operations.
