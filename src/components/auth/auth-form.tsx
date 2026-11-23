@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
@@ -17,6 +17,66 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [image, setImage] = useState("");
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoStatus, setPhotoStatus] = useState<"empty" | "checking" | "valid" | "invalid">("empty");
+
+  useEffect(() => {
+    if (!photoPreview) return;
+    return () => URL.revokeObjectURL(photoPreview);
+  }, [photoPreview]);
+
+  useEffect(() => {
+    if (!image.trim() || photo) return;
+    let active = true;
+    const timer = setTimeout(() => {
+      try {
+        const url = new URL(image.trim());
+        if (url.protocol !== "https:" || url.username || url.password || url.hostname === "ibb.co" || url.hostname === "ibb.co.com") {
+          setPhotoStatus("invalid"); return;
+        }
+        setPhotoStatus("checking");
+        const preview = new Image();
+        preview.onload = () => { if (active) setPhotoStatus("valid"); };
+        preview.onerror = () => { if (active) setPhotoStatus("invalid"); };
+        preview.src = url.href;
+      } catch { setPhotoStatus("invalid"); }
+    }, 350);
+    return () => { active = false; clearTimeout(timer); };
+  }, [image, photo]);
+
+  function selectPhoto(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    if (file && (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type) || file.size > 5 * 1024 * 1024)) {
+      setError("Choose a JPEG, PNG, WebP, or GIF image under 5 MB.");
+      event.target.value = "";
+      return;
+    }
+    setError("");
+    setPhoto(file);
+    setPhotoPreview(file ? URL.createObjectURL(file) : "");
+    if (file) {
+      setImage("");
+      setPhotoStatus("empty");
+    }
+  }
+
+  async function uploadPhoto(file: File): Promise<string> {
+    const encoded = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Could not read your photo."));
+      reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+      reader.readAsDataURL(file);
+    });
+    const response = await fetch("/api/profile/image", {
+      method: "POST", credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: encoded, mime: file.type }),
+    });
+    const result = await response.json() as { success?: boolean; data?: { url?: string }; message?: string };
+    if (!response.ok || !result.success || !result.data?.url) throw new Error(result.message || "Photo upload failed.");
+    return result.data.url;
+  }
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -41,6 +101,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
       setError("Use 6+ characters with uppercase and lowercase letters, and matching passwords.");
       return;
     }
+    if (register && !photo && image.trim() && photoStatus !== "valid") {
+      setError("Enter a direct HTTPS image URL that loads in the preview, or upload a photo.");
+      return;
+    }
     setBusy(true);
     try {
       const result = register
@@ -49,6 +113,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
       if (result.error) {
         setError(result.error.message || "Authentication failed. Please try again.");
         return;
+      }
+      if (register && photo) {
+        try {
+          const uploadedUrl = await uploadPhoto(photo);
+          const updated = await authClient.updateUser({ image: uploadedUrl });
+          if (updated.error) throw new Error(updated.error.message || "Photo could not be saved.");
+        } catch (uploadError) {
+          setError(`Account created, but the photo was not saved: ${uploadError instanceof Error ? uploadError.message : "Upload failed"}. You can sign in normally.`);
+          return;
+        }
       }
       setSuccess(register ? "Account created successfully." : "Signed in successfully.");
       const role = result.data?.user && "role" in result.data.user && result.data.user.role === "admin" ? "admin" : "customer";
@@ -96,7 +170,22 @@ export function AuthForm({ mode }: { mode: Mode }) {
         <form onSubmit={submit} className="flex flex-col gap-4">
           {register && <>
             <label className="flex flex-col gap-2 text-sm font-semibold">Full name<input className={inputClass} value={name} onChange={(e)=>setName(e.target.value)} required minLength={2} maxLength={100} autoComplete="name" placeholder="Your full name"/></label>
-            <label className="flex flex-col gap-2 text-sm font-semibold">Profile image URL <span className="text-xs font-normal text-[var(--muted)]">(optional)</span><input className={inputClass} value={image} onChange={(e)=>setImage(e.target.value)} type="url" placeholder="https://example.com/photo.jpg" /></label>
+            <div className="flex flex-col gap-3 text-sm font-semibold">
+              <span>Profile photo <span className="text-xs font-normal text-[var(--muted)]">(optional)</span></span>
+              <label className="flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-[var(--border)] p-4 text-sm transition-colors hover:border-[#FF5100]">
+                Choose photo to upload (max 5 MB)
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={selectPhoto} disabled={busy}/>
+              </label>
+              <span className="text-center text-xs font-normal text-[var(--muted)]">or use a direct image URL</span>
+              <input aria-label="Direct profile image URL" className={inputClass} value={image} onChange={(e)=>{setImage(e.target.value);setPhoto(null);setPhotoPreview("");setPhotoStatus(e.target.value.trim() ? "checking" : "empty");}} type="url" maxLength={2048} placeholder="https://example.com/photo.jpg" disabled={busy}/>
+              {(photoPreview || (image.trim() && photoStatus === "valid")) && <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photoPreview || image.trim()} alt="Profile photo preview" className="h-14 w-14 rounded-full border border-[var(--border)] object-cover"/>
+                <span className="text-xs font-normal text-[var(--muted)]">{photo ? photo.name : "Image preview loaded"}</span>
+              </div>}
+              {!photo && image.trim() && photoStatus === "checking" && <span className="text-xs font-normal text-[var(--muted)]">Checking image URL…</span>}
+              {!photo && image.trim() && photoStatus === "invalid" && <span role="alert" className="text-xs font-normal text-red-500">This URL does not load as an image. Use a direct image link or upload a photo.</span>}
+            </div>
           </>}
           <label className="flex flex-col gap-2 text-sm font-semibold">Email address<input className={inputClass} value={email} onChange={(e)=>setEmail(e.target.value)} type="email" autoComplete="email" required placeholder="you@example.com"/></label>
           <label className="flex flex-col gap-2 text-sm font-semibold">Password
