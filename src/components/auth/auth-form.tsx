@@ -88,13 +88,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   const passwordValid = password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);
 
-  function destination(role: "admin" | "customer") {
+  function requestedDestination(role: "admin" | "customer") {
     const requested = new URLSearchParams(window.location.search).get("next");
-    if (requested && requested.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\") && !requested.includes(":") && !requested.includes("%")) {
-      if (requested.startsWith("/services/") && role === "customer") return requested;
-      if (requested === `/dashboard/${role}` || requested === "/dashboard") return requested;
-    }
-    return `/dashboard/${role}`;
+    if (!requested || !requested.startsWith("/") || requested.startsWith("//") || requested.includes("\\") || requested.includes(":") || requested.includes("%")) return "/";
+    if (requested.startsWith("/dashboard/admin") && role !== "admin") return `/dashboard/${role}`;
+    if (requested.startsWith("/dashboard/customer") && role !== "customer") return `/dashboard/${role}`;
+    if (requested === "/dashboard") return `/dashboard/${role}`;
+    return requested;
   }
 
   function showError(message: string) {
@@ -135,7 +135,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       }
       notify.success(register ? "Account created successfully." : "Signed in successfully.", { id: "aayna-auth-success" });
       const role = result.data?.user && "role" in result.data.user && result.data.user.role === "admin" ? "admin" : "customer";
-      router.replace(destination(role));
+      router.replace(requestedDestination(role));
       router.refresh();
     } catch {
       showError("Could not reach the authentication service. Please try again.");
@@ -148,13 +148,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
     try {
       // Gateway rechecks the server session and redirects by the authoritative role.
       const next = new URLSearchParams(window.location.search).get("next");
-      // Better Auth runs on port 5000; use an absolute frontend URL so
-      // the OAuth callback cannot resolve /dashboard against the API origin.
+      const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") && !next.includes(":") && !next.includes("%") ? next : "/";
       const frontendOrigin = window.location.origin;
-      const callbackPath = next && /^\/services\/[a-f0-9]{24}$/i.test(next)
-        ? `/dashboard?next=${encodeURIComponent(next)}`
-        : "/dashboard";
-      const callbackURL = `${frontendOrigin}${callbackPath}`;
+      // The gateway validates the session and role before returning to the requested route.
+      const callbackURL = `${frontendOrigin}/dashboard?next=${encodeURIComponent(safeNext)}&oauth=1`;
       const result = await authClient.signIn.social({ provider: "google", callbackURL });
       if (result.error) showError(result.error.message || "Google sign-in is unavailable.");
     } catch {

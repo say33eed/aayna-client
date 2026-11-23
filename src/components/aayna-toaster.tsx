@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 
 /** Persistent notification host; follows Aayna's data-theme setting. */
 export function AaynaToaster() {
@@ -14,6 +14,15 @@ export function AaynaToaster() {
     const observer = new MutationObserver(update);
     observer.observe(element, { attributes: true, attributeFilter: ["data-theme"] });
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("aayna_google_success") !== "1") return;
+    url.searchParams.delete("aayna_google_success");
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    const timer = window.setTimeout(() => toast.success("Signed in with Google successfully."), 150);
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (

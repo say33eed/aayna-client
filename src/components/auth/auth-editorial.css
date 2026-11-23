@@ -16,3 +16,12 @@
 @media(max-width:900px){.auth-editorial{grid-template-columns:1fr;max-width:620px}.auth-story{min-height:190px}.auth-art-mirror{width:40%;height:180%;left:-4%;top:-50%}.auth-art-shelf,.auth-art-jar,.auth-art-brush{display:none}.auth-story-copy{bottom:23px;left:30px}.auth-story-copy h2{font-size:31px;margin:6px 0}.auth-story-copy>p:not(.auth-overline),.auth-story-index{display:none}.auth-story-line{margin-bottom:10px}.auth-form-side{padding:36px 28px 42px}}
 @media(max-width:520px){.auth-editorial{margin:12px auto 35px;border-radius:18px}.auth-story{min-height:135px}.auth-story-copy h2{font-size:26px}.auth-story-copy .auth-overline{font-size:9px}.auth-form-side{padding:30px 20px 35px}.auth-heading{margin-bottom:24px}.auth-heading h1{font-size:31px}}
 @media(prefers-reduced-motion:reduce){.auth-input,.auth-google{transition:none}}
+
+/* Same photographic hero used on the homepage; overlay preserves readable copy. */
+.auth-story{background:#191919 url("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat;color:#fff}
+.auth-story::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,.13));pointer-events:none;z-index:1}
+.auth-story .auth-art{display:none}
+.auth-story .auth-story-copy{z-index:2;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.auth-story .auth-story-line{background:#fff}
+:root[data-theme="dark"] .auth-story{color:#fff;background-color:#191919}
+:root[data-theme="dark"] .auth-story .auth-story-line{background:#fff}

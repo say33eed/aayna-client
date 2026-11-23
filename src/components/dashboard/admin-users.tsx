@@ -74,7 +74,7 @@ export function AdminUsers() {
   }
 
   return <section className="aaynaUsers" aria-label="Customer directory">
-    <div className="aaynaUsers_intro"><div><span className="aaynaUsers_kicker">PEOPLE / 01</span><h2>Every customer.<br/><em>Clearly connected.</em></h2><p>Understand your community and manage account access with care.</p></div><div className="aaynaUsers_total"><strong>{data?.total ?? "—"}</strong><span>Matching customers</span></div></div>
+    <div className="aaynaUsers_intro"><div><span className="aaynaUsers_kicker">PEOPLE / 01</span><h2>All Customers</h2><p>Understand your community and manage account access with care.</p></div><div className="aaynaUsers_total"><strong>{data?.total ?? "—"}</strong><span>Matching customers</span></div></div>
     <div className="aaynaUsers_toolbar"><label className="aaynaUsers_search"><Search size={19}/><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name or email" aria-label="Search customers" /></label><div className="aaynaUsers_select"><AaynaSelect value={filter} onChange={(event) => { setFilter(event.target.value as Filter); setPage(1); }}><option value="all">All accounts</option><option value="active">Active</option><option value="blocked">Blocked</option></AaynaSelect></div><button className="aaynaUsers_refresh" type="button" onClick={reload} disabled={loading} aria-label="Refresh customers"><RefreshCw size={19}/></button></div>
     {error && <div className="aaynaUsers_error" role="alert">{error} <button type="button" onClick={reload}>Retry</button></div>}
     <div className="aaynaUsers_list"><div className="aaynaUsers_header"><span>Customer</span><span>Joined</span><span>Appointments</span><span>Access</span><span></span></div>

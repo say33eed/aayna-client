@@ -219,9 +219,9 @@ export function Navbar() {
       style={{ backgroundColor: "color-mix(in srgb, var(--background) 76%, transparent)" }}
     >
       <div className="site-container grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 xl:h-[72px] xl:grid-cols-[minmax(175px,1fr)_auto_minmax(235px,1fr)]">
-        <Link href="/" onClick={closeMenus} aria-label="AAYNA home" className={`brand w-fit shrink-0 ${focusRing}`}>
+        <Link href="/" onClick={closeMenus} aria-label="AAYNA home" className={`inline-flex w-fit shrink-0 items-center gap-2.5 rounded-md ${focusRing}`}>
           <BrandMark size={28} color="accent" />
-          <span>aayna<span className="brand-dot" aria-hidden="true" /></span>
+          <span className="font-[family-name:var(--font-quicksand)] text-[32px] leading-none font-extrabold tracking-[-0.055em]">aayna<span className="ml-0.5 inline-block size-1.5 rounded-full bg-[#FF5100]" aria-hidden="true" /></span>
         </Link>
 
         <nav className="hidden items-center justify-center gap-7 xl:flex" aria-label="Main navigation">
