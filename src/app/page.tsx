@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Pause, Play } from "lucide-react";
 import { FeaturedServices } from "@/components/featured-services";
+import { JournalSection } from "@/components/journal-section";
 import { ServiceCategories } from "@/components/service-categories";
 
 
@@ -87,6 +88,7 @@ export default function Home() {
     </section>
     <FeaturedServices />
     <ServiceCategories />
+    <JournalSection />
     </>
   );
 }

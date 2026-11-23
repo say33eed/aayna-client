@@ -1,3 +1,4 @@
+import "@/components/journal.css";
 import type { Metadata } from "next";
 import { Nunito_Sans, Quicksand, Hind_Siliguri } from "next/font/google";
 import { RouteFrame } from "@/components/route-frame";

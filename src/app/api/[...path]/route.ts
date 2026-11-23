@@ -9,7 +9,7 @@ const upstream = (process.env.API_PROXY_TARGET || process.env.NEXT_PUBLIC_API_UR
 async function proxy(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
   // Explicitly allow application API groups; do not proxy the Stripe webhook.
-  const allowed = ["auth", "appointments", "services", "admin", "payments", "profile"];
+  const allowed = ["auth", "appointments", "services", "admin", "payments", "profile", "journal"];
   if (!path?.length || !allowed.includes(path[0]) ||
       (path[0] === "payments" && path[1] === "webhook")) {
     return NextResponse.json({ success: false, message: "Route not found." }, { status: 404 });

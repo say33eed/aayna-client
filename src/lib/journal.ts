@@ -1,0 +1,1 @@
+export type JournalArticle = { _id: string; slug: string; title: string; excerpt: string; body: string; category: "Hair Care" | "Skin Care" | "Nail Care" | "Wellness"; image: string; featured: boolean; published: boolean; createdAt: string; publishedAt?: string | null };
