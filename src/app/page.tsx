@@ -6,6 +6,8 @@ import { ArrowUpRight, Pause, Play } from "lucide-react";
 import { FeaturedServices } from "@/components/featured-services";
 import { JournalSection } from "@/components/journal-section";
 import { ServiceCategories } from "@/components/service-categories";
+import { HowItWorksSection } from "@/components/how-it-works-section";
+import { Button } from "@/components/ui/button";
 
 
 const HEADLINES = [
@@ -73,9 +75,9 @@ export default function Home() {
         <p className={"aayna-description"}>
           Discover salon services, explore your options, and book your next appointment with confidence.
         </p>
-        <Link className={"aayna-cta"} href="/services">
+        <Button asChild size="lg" className="mt-9 min-h-14 rounded-full px-7"><Link href="/services">
           Explore Salon Services <ArrowUpRight size={19} strokeWidth={2} aria-hidden="true" />
-        </Link>
+        </Link></Button>
       </div>
       <button
         className="aayna-motionButton"
@@ -88,6 +90,7 @@ export default function Home() {
     </section>
     <FeaturedServices />
     <ServiceCategories />
+    <HowItWorksSection />
     <JournalSection />
     </>
   );

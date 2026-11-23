@@ -75,6 +75,7 @@ export function Navbar() {
   const fullName = user?.name?.trim() || "Account";
   const givenName = fullName.split(/\s+/)[0] || "Account";
   const initials = fullName.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "A";
+  const [homeSection, setHomeSection] = useState<"home" | "how-it-works" | "journal">("home");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -86,6 +87,38 @@ export function Navbar() {
 
   const active = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
+  useEffect(() => {
+    if (pathname !== "/") return;
+    let frame = 0;
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const journal = document.getElementById("journal");
+        const how = document.getElementById("how-it-works");
+        const marker = window.scrollY + 160;
+        const section = journal && marker >= journal.offsetTop
+          ? "journal"
+          : how && marker >= how.offsetTop
+            ? "how-it-works"
+            : "home";
+        setHomeSection(section);
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    window.addEventListener("hashchange", update);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("hashchange", update);
+    };
+  }, [pathname]);
+
+  const homeActive = pathname === "/" && homeSection === "home";
+  const howActive = pathname === "/" && homeSection === "how-it-works";
+  const journalActive = (pathname === "/" && homeSection === "journal") || active("/journal");
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
@@ -192,7 +225,7 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center justify-center gap-7 xl:flex" aria-label="Main navigation">
-          <NavigationLink href="/" active={active("/")}>Home</NavigationLink>
+          <NavigationLink href="/" active={homeActive}>Home</NavigationLink>
           <Link href="/services" aria-current={active("/services") ? "page" : undefined} className={apertureClass}>
             <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border-2 border-[#FF5100] text-[#FF5100] transition-transform duration-200 motion-safe:group-hover:scale-110" aria-hidden="true">
               <Search size={15} strokeWidth={2.5} />
@@ -200,6 +233,8 @@ export function Navbar() {
             <span>Browse Services</span>
             <ArrowUpRight size={15} className="text-[var(--muted)] transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
+          <NavigationLink href="/#how-it-works" active={howActive}>How It Works</NavigationLink>
+          <NavigationLink href="/#journal" active={journalActive}>Journal</NavigationLink>
         </nav>
 
         <div className="flex items-center justify-end gap-2 xl:gap-3">
@@ -252,13 +287,15 @@ export function Navbar() {
 
       {mobileOpen && <nav id="aayna-mobile-navigation" aria-label="Mobile navigation" className="border-t border-[var(--border)] bg-[var(--background)] xl:hidden">
         <div className="site-container flex flex-col items-start gap-2 py-5">
-          <NavigationLink href="/" active={active("/")} onClick={closeMenus} className="min-h-11">Home</NavigationLink>
+          <NavigationLink href="/" active={homeActive} onClick={closeMenus} className="min-h-11">Home</NavigationLink>
           <Link href="/services" onClick={closeMenus} aria-current={active("/services") ? "page" : undefined}
             className={`flex min-h-16 w-full items-center gap-3 rounded-2xl border-2 border-[#FF5100] bg-[var(--surface)] px-3 text-[var(--foreground)]! no-underline transition-colors hover:bg-[var(--background)] ${focusRing}`}>
             <span className="inline-flex size-9 items-center justify-center rounded-full border-2 border-[#FF5100] text-[#FF5100]"><Search size={18} strokeWidth={2.5} aria-hidden="true" /></span>
             <span className="flex flex-1 flex-col gap-0.5"><span className="text-sm font-extrabold">Browse Services</span><span className="text-xs text-[var(--muted)]">Find your next service</span></span>
             <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
+          <NavigationLink href="/#how-it-works" active={howActive} onClick={closeMenus} className="min-h-11">How It Works</NavigationLink>
+          <NavigationLink href="/#journal" active={journalActive} onClick={closeMenus} className="min-h-11">Journal</NavigationLink>
           {!isPending && user && <div className="mt-2 w-full border-t border-[var(--border)] pt-4">
             <div className="flex items-center gap-3 pb-3">
               <Identity image={user.image} initials={initials} />

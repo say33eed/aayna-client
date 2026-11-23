@@ -26,6 +26,8 @@ export function Footer() {
             <h3 className="m-0 text-xs font-extrabold uppercase tracking-[0.12em]">Explore</h3>
             <FooterLink href="/">Home</FooterLink>
             <FooterLink href="/services">Browse Services</FooterLink>
+            <FooterLink href="/#how-it-works">How It Works</FooterLink>
+            <FooterLink href="/#journal">Journal</FooterLink>
           </nav>
 
           <section aria-labelledby="footer-salon-information" className="flex min-w-0 flex-col items-center gap-4 lg:items-start">

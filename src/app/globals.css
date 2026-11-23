@@ -539,3 +539,8 @@ body:has([data-aayna-dashboard]) .main-content { display:block; }
 /* v0.51 — receipt actions */
 .aaynaReceipt_actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.aaynaReceipt_actions button,.aaynaReceipt_reopen{border:1px solid #111;border-radius:999px;padding:12px 19px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;background:#111;color:#fff}.aaynaReceipt_actions button+button{background:transparent;color:#111}.aaynaReceipt_actions button:hover,.aaynaReceipt_reopen:hover{opacity:.8}.aaynaReceipt_actions button:focus-visible,.aaynaReceipt_reopen:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 @media(prefers-color-scheme:dark){.aaynaReceipt_page{color-scheme:light}}
+
+/* Homepage anchor navigation: respect the sticky header and reduced motion preferences. */
+html { scroll-behavior: smooth; }
+#how-it-works, #journal { scroll-margin-top: 96px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
