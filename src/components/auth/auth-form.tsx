@@ -90,7 +90,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   function requestedDestination(role: "admin" | "customer") {
     const requested = new URLSearchParams(window.location.search).get("next");
-    if (!requested || !requested.startsWith("/") || requested.startsWith("//") || requested.includes("\\") || requested.includes(":") || requested.includes("%")) return "/";
+    if (!requested || !requested.startsWith("/") || requested.startsWith("//") || requested.includes("\\") || requested.includes(":") || requested.includes("%")) return `/dashboard/${role}`;
     if (requested.startsWith("/dashboard/admin") && role !== "admin") return `/dashboard/${role}`;
     if (requested.startsWith("/dashboard/customer") && role !== "customer") return `/dashboard/${role}`;
     if (requested === "/dashboard") return `/dashboard/${role}`;
@@ -148,7 +148,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     try {
       // Gateway rechecks the server session and redirects by the authoritative role.
       const next = new URLSearchParams(window.location.search).get("next");
-      const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") && !next.includes(":") && !next.includes("%") ? next : "/";
+      const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") && !next.includes(":") && !next.includes("%") ? next : "/dashboard";
       const frontendOrigin = window.location.origin;
       // The gateway validates the session and role before returning to the requested route.
       const callbackURL = `${frontendOrigin}/dashboard?next=${encodeURIComponent(safeNext)}&oauth=1`;

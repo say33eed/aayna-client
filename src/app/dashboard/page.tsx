@@ -13,6 +13,8 @@ export default async function DashboardGateway({ searchParams }: { searchParams:
   const next = params.next;
   const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") && !next.includes(":") && !next.includes("%") ? next : null;
   const oauthFlag = params.oauth === "1" ? "?aayna_google_success=1" : "";
+  if (safeNext?.startsWith("/dashboard/admin") && role !== "admin") redirect(`/dashboard/${role}${oauthFlag}`);
+  if (safeNext?.startsWith("/dashboard/customer") && role !== "customer") redirect(`/dashboard/${role}${oauthFlag}`);
   if (safeNext && !safeNext.startsWith("/dashboard/")) {
     redirect(`${safeNext}${oauthFlag ? `${safeNext.includes("?") ? "&" : "?"}aayna_google_success=1` : ""}`);
   }

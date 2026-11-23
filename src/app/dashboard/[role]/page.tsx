@@ -4,7 +4,7 @@ import { API_BASE_URL } from "@/lib/api";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 
 export const dynamic = "force-dynamic";
-type Session = { user?: { name?: string; email?: string; role?: string; isBlocked?: boolean } } | null;
+type Session = { user?: { name?: string; email?: string; image?: string; role?: string; isBlocked?: boolean } } | null;
 export default async function Dashboard({ params, searchParams }: { params: Promise<{ role: string }>; searchParams: Promise<{ view?: string }> }) {
   const { role } = await params;
   const { view } = await searchParams;
@@ -67,5 +67,5 @@ export default async function Dashboard({ params, searchParams }: { params: Prom
       adminOverview = result.data;
     } catch { adminError = "Unable to load live admin statistics. Please retry."; }
   }
-  return <DashboardShell adminOverview={adminOverview} adminError={adminError} role={actualRole} name={session.user.name || "Account"} email={session.user.email || ""} summary={summary} summaryError={summaryError} view={activeView} appointments={appointments} appointmentsError={appointmentsError} />;
+  return <DashboardShell adminOverview={adminOverview} adminError={adminError} role={actualRole} name={session.user.name || "Account"} email={session.user.email || ""} image={session.user.image || ""} summary={summary} summaryError={summaryError} view={activeView} appointments={appointments} appointmentsError={appointmentsError} />;
 }

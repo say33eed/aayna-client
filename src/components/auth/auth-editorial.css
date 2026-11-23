@@ -25,3 +25,6 @@
 .auth-story .auth-story-line{background:#fff}
 :root[data-theme="dark"] .auth-story{color:#fff;background-color:#191919}
 :root[data-theme="dark"] .auth-story .auth-story-line{background:#fff}
+
+/* Keep the hero photograph visible in both color schemes. */
+:root[data-theme="dark"] .auth-story{background:#191919 url("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat!important}

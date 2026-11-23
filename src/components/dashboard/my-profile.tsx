@@ -81,6 +81,22 @@ export function MyProfile() {
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy || !profile) return;
+    if (image.trim()) {
+      try {
+        const url = new URL(image.trim());
+        if (url.protocol !== "https:" || url.username || url.password || !url.hostname.includes(".")) throw new Error("invalid");
+        await new Promise<void>((resolve, reject) => {
+          const preview = new window.Image();
+          const timeout = window.setTimeout(() => { preview.onload = null; preview.onerror = null; reject(new Error("timeout")); }, 8000);
+          preview.onload = () => { window.clearTimeout(timeout); resolve(); };
+          preview.onerror = () => { window.clearTimeout(timeout); reject(new Error("load")); };
+          preview.src = url.toString();
+        });
+      } catch {
+        const message = "Enter a working direct HTTPS image URL or upload a photo.";
+        setError(message); notify.error(message); return;
+      }
+    }
     setSaving(true); setError(""); setNotice("");
     try {
       const response = await fetch(`${API_BASE_URL}/api/profile/me`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name.trim(), phone: phone.trim(), image: image.trim() }) });

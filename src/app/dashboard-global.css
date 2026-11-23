@@ -119,3 +119,8 @@
 
 .aaynaDash_historyThumb{overflow:hidden}
 .aaynaDash_historyThumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Match the footer wordmark exactly (Quicksand ExtraBold). */
+.aaynaDash_wordmark{font-family:var(--font-quicksand),sans-serif!important;font-size:32px!important;font-weight:800!important;letter-spacing:-.055em!important;line-height:1!important}
+.aaynaDash_wordmark .aaynaDash_dot{display:inline-block;width:6px;height:6px;margin-left:2px;background:#ff5100;border-radius:50%;font-size:0;vertical-align:baseline}
+.aaynaDash_avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
