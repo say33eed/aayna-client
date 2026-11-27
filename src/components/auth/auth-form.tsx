@@ -86,7 +86,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const passwordValid = password.length >= 6 && /[A-Z]/.test(password) && /[a-z]/.test(password);
+  const passwordValid = password.length >= 12 && /[A-Z]/.test(password) && /[a-z]/.test(password);
 
   function requestedDestination(role: "admin" | "customer") {
     const requested = new URLSearchParams(window.location.search).get("next");
@@ -107,7 +107,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     if (busy) return;
     setError("");
     if (register && (!name.trim() || !passwordValid || password !== confirm)) {
-      showError("Use 6+ characters with uppercase and lowercase letters, and matching passwords.");
+      showError("Use 12+ characters with uppercase and lowercase letters, and matching passwords.");
       return;
     }
     if (register && !photo && image.trim() && photoStatus !== "valid") {
@@ -192,7 +192,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
               <label className="auth-field"><span>Full name</span><span className="auth-input-wrap"><UserRound size={18} aria-hidden="true"/><input className={inputClass} value={name} onChange={(e)=>setName(e.target.value)} required minLength={2} maxLength={100} autoComplete="name" placeholder="Your full name"/></span></label>
             </>}
             <label className="auth-field"><span>Email address</span><span className="auth-input-wrap"><Mail size={18} aria-hidden="true"/><input className={inputClass} value={email} onChange={(e)=>setEmail(e.target.value)} type="email" autoComplete="email" required placeholder="you@example.com"/></span></label>
-            <label className="auth-field"><span>Password</span><span className="auth-input-wrap"><LockKeyhole size={18} aria-hidden="true"/><input className="auth-input auth-password-input" value={password} onChange={(e)=>setPassword(e.target.value)} type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} required minLength={6} placeholder={register ? "Create a password" : "Enter your password"}/><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} onClick={()=>setShowPassword(!showPassword)} className="auth-eye">{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></span></label>
+            <label className="auth-field"><span>Password</span><span className="auth-input-wrap"><LockKeyhole size={18} aria-hidden="true"/><input className="auth-input auth-password-input" value={password} onChange={(e)=>setPassword(e.target.value)} type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} required minLength={register ? 12 : 1} placeholder={register ? "Create a password" : "Enter your password"}/><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} onClick={()=>setShowPassword(!showPassword)} className="auth-eye">{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></span></label>
             {register && <>
               <p className="auth-hint" aria-live="polite">6+ characters, including uppercase and lowercase letters.</p>
               <label className="auth-field"><span>Confirm password</span><span className="auth-input-wrap"><LockKeyhole size={18} aria-hidden="true"/><input className={inputClass} value={confirm} onChange={(e)=>setConfirm(e.target.value)} type="password" autoComplete="new-password" required placeholder="Repeat your password"/></span></label>

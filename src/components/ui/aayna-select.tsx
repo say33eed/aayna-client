@@ -97,7 +97,7 @@ export function AaynaSelect({ children, value, defaultValue, onChange, disabled,
     <button
       ref={triggerRef} id={id} type="button" className="aayna-select-trigger"
       aria-label={ariaLabel} aria-haspopup="listbox" aria-controls={open ? listId : undefined}
-      aria-expanded={open} aria-required={required || undefined} disabled={disabled}
+      aria-expanded={open} disabled={disabled}
       onClick={toggle} onKeyDown={keyDown}
     >
       <span className={`aayna-select-value ${!selected ? "aayna-select-placeholder" : ""}`}>{activeOption?.label ?? options[0]?.label ?? "Select an option"}</span>
@@ -110,7 +110,7 @@ export function AaynaSelect({ children, value, defaultValue, onChange, disabled,
     >{children}</select>
     {open && typeof document !== "undefined" && createPortal(
       <div
-        ref={panelRef} id={listId} role="listbox" aria-label={ariaLabel ?? "Choose an option"}
+        ref={panelRef} id={listId} role="listbox" aria-required={required || undefined} aria-label={ariaLabel ?? "Choose an option"}
         className="aayna-select-menu" style={{ left: position.left, top: position.top, minWidth: position.width, transform: position.above ? "translateY(-100%)" : undefined }}
       >
         {options.map((option) => <button
